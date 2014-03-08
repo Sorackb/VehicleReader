@@ -1,4 +1,4 @@
-package org.lucassouza.pojo;
+package org.lucassouza.vehiclereader.pojo;
 
 /**
  *
