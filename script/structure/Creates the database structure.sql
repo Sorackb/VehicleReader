@@ -6,7 +6,8 @@ if not exists(select t.object_id
 begin
   create table fipe.tb_vehicle_classification(
     id          int         not null,
-    description varchar(15) not null,
+    description_en varchar(15) not null,
+	description_pt varchar(15) not null,
     constraint  pk_vehicle_classification primary key(id));
 end;
 go
@@ -18,8 +19,9 @@ if not exists(select t.object_id
                  and t.name = 'tb_fuel_type')
 begin
   create table fipe.tb_fuel_type(
-    id          int         not null,
-    description varchar(30) not null,
+    id             int         not null,
+    description_en varchar(30) not null,
+	description_pt varchar(30) not null,
     constraint  pk_tb_fuel_type primary key(id));
 end;
 go
@@ -31,8 +33,9 @@ if not exists(select t.object_id
                  and t.name = 'tb_reference_situation')
 begin
   create table fipe.tb_reference_situation(
-    id          int         not null,
-    description varchar(15) not null,
+    id             int         not null,
+    description_en varchar(15) not null,
+	description_pt varchar(15) not null,
     constraint  pk_reference_situation primary key(id));
 end;
 go
@@ -46,7 +49,8 @@ begin
   create table fipe.tb_reference(
     id                     int not null,
     id_reference_situation int not null,
-    description            varchar(15),
+    description_en         varchar(15),
+	description_pt         varchar(15),
     month                  int not null,
     year                   int not null,
     constraint pk_reference primary key(id),
@@ -75,9 +79,9 @@ if not exists(select t.object_id
                  and t.name = 'tb_model')
 begin
   create table fipe.tb_model(
-    id                        varchar(8) not null,
-    id_brand                  int not null,
-    id_vehicle_classification int not null,
+    id                        varchar(8)  not null,
+    id_brand                  int         not null,
+    id_vehicle_classification int         not null,
     description               varchar(90) not null,
     constraint pk_model primary key(id),
     constraint fk_model_brand foreign key(id_brand)
@@ -94,13 +98,13 @@ if not exists(select t.object_id
                  and t.name = 'tb_year_price')
 begin
   create table fipe.tb_year_price(
-    id                  int not null,
-    id_model           varchar(8) not null,
-    id_reference       int not null,
+    id           int        not null,
+    id_model     varchar(8) not null,
+    id_reference int        not null,
     id_fuel_type int,
-    year                     int not null,
-    price                   money,
-    reading_date            datetime default getDate(),
+    year         int        not null,
+    price        money,
+    reading_date datetime default getDate(),
     constraint pk_year_price primary key(id),
     constraint fk_year_price_model foreign key(id_model)
                references fipe.tb_model(id) on delete cascade,
