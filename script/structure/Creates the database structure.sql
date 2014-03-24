@@ -105,7 +105,7 @@ begin
     year         int        not null,
     price        money,
     reading_date datetime default getDate(),
-    constraint pk_year_price primary key(id),
+    constraint pk_year_price primary key(id, id_model),
     constraint fk_year_price_model foreign key(id_model)
                references fipe.tb_model(id) on delete cascade,
     constraint fk_year_price_reference foreign key(id_reference)
