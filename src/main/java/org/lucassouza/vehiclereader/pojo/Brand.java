@@ -2,7 +2,7 @@ package org.lucassouza.vehiclereader.pojo;
 
 /**
  *
- * @author Lucas Souza <sorackb@gmail.com>
+ * @author Lucas Souza [sorackb@gmail.com]
  */
 public class Brand {
   private Integer id;

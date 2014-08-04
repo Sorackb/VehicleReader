@@ -6,7 +6,7 @@ package org.lucassouza.vehiclereader.type;
 
 /**
  *
- * @author Lucas Bernardo <sorackb@gmail.com>
+ * @author Lucas Bernardo [sorackb@gmail.com]
  */
 public enum ReferenceSituation {
 

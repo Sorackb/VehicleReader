@@ -5,7 +5,7 @@ import org.lucassouza.vehiclereader.type.FuelType;
 
 /**
  *
- * @author Lucas Souza <sorackb@gmail.com>
+ * @author Lucas Souza [sorackb@gmail.com]
  */
 public class YearPrice {
 

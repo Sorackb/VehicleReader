@@ -4,7 +4,7 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
 
 /**
  *
- * @author Lucas Souza <sorackb@gmail.com>
+ * @author Lucas Souza [sorackb@gmail.com]
  */
 public class Model {
 

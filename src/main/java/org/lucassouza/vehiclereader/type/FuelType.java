@@ -6,7 +6,7 @@ package org.lucassouza.vehiclereader.type;
 
 /**
  *
- * @author Lucas Bernardo <sorackb@gmail.com>
+ * @author Lucas Bernardo [sorackb@gmail.com]
  */
 public enum FuelType {
 
@@ -18,7 +18,7 @@ public enum FuelType {
     idDB = aIdDB;
   }
 
-  public static FuelType getTipoCombustivel(String fuelTypeDescription) {
+  public static FuelType getFuelType(String fuelTypeDescription) {
     FuelType result;
 
     if (fuelTypeDescription == null || fuelTypeDescription.trim().equals("")) {
