@@ -43,7 +43,7 @@ public class YearPriceBR extends BasicBR {
 
     for (Element yearPriceElement : yearPriceList) {
       id = yearPriceElement.attr("value");
-      // Desconsidera o primeiro
+
       if (this.proceed) {
         this.interaction.setYearPriceId(Integer.parseInt(id));
         yearPrice = this.convert(reference, model);
@@ -61,7 +61,7 @@ public class YearPriceBR extends BasicBR {
     }
 
     // Tentativa de acelerar o processo, não necessitando que a conexão seja aberta várias vezes
-    this.yearPricePT.insert(result);
+    this.yearPricePT.create(result);
 
     return result;
   }
@@ -107,6 +107,7 @@ public class YearPriceBR extends BasicBR {
     if (lastYearPrice != null) {
       this.proceed = false;
     }
+
     this.lastYearPrice = lastYearPrice;
   }
 }

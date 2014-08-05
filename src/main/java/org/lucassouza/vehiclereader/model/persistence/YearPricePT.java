@@ -1,17 +1,19 @@
 package org.lucassouza.vehiclereader.model.persistence;
 
 import java.util.LinkedHashMap;
+import org.lucassouza.dao.EclipseLinkPT;
 import org.lucassouza.vehiclereader.pojo.YearPrice;
+import org.lucassouza.vehiclereader.utils.Configuration;
 
 /**
  *
  * @author Lucas Souza [sorackb@gmail.com]
  */
-public class YearPricePT extends BasicPT<YearPrice> {
+public class YearPricePT extends EclipseLinkPT<YearPrice> {
 
   public YearPricePT() {
-    super();
-    this.referencedClass = YearPrice.class;
+    super(Configuration.getPUName(), Configuration.getBDConfig());
+    this.objectClass = YearPrice.class;
   }
 
   public YearPrice searchLast() {
@@ -20,7 +22,7 @@ public class YearPricePT extends BasicPT<YearPrice> {
 
     orderBy.put("readingDate", "desc");
 
-    result = this.search(null, orderBy);
+    result = this.read(null, orderBy);
 
     return result;
   }
