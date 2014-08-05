@@ -1,6 +1,7 @@
 package org.lucassouza.vehiclereader.model.businessrule;
 
 import org.lucassouza.vehiclereader.controller.Communicable;
+import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.type.ResourceType;
 
 /**
@@ -11,6 +12,7 @@ public class BasicBR {
 
   protected ResourceType resourceType;
   protected Communicable observer;
+  protected Interaction interaction;
 
   protected void informAmount(Integer amount) {
     if (this.observer != null) {

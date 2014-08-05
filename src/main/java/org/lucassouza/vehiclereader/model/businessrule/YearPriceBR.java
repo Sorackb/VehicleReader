@@ -19,7 +19,6 @@ import org.lucassouza.vehiclereader.type.ResourceType;
  */
 public class YearPriceBR extends BasicBR {
 
-  private final Interaction interaction;
   private final YearPricePT yearPricePT;
   private YearPrice lastYearPrice;
   private Boolean proceed;

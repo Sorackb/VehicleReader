@@ -9,7 +9,7 @@ import org.lucassouza.tools.PropertyTool;
 
 /**
  *
- * @author Lucas Souza [lucas.souza@virtual.inf.br]
+ * @author Lucas Souza [sorackb@gmail.com]
  */
 public class Configuration {
 

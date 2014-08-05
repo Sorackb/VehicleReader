@@ -15,11 +15,10 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
 
 /**
  *
- * @author Lucas Souza [lucas.souza@virtual.inf.br]
+ * @author Lucas Souza [sorackb@gmail.com]
  */
 public class ModelBR extends BasicBR {
 
-  private final Interaction interaction;
   private final ModelPT modelPT;
   private final YearPriceBR yearPriceBR;
   private Model lastModel;
@@ -51,8 +50,8 @@ public class ModelBR extends BasicBR {
 
       if (this.proceed) {
         result.add(model);
-      } else {
         // Caso não precise ser lido, apenas incrementa pra indicar que já está completo
+      } else {
         this.informIncrement();
       }
     }
