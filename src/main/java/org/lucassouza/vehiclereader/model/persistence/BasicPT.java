@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import org.lucassouza.vehiclereader.utils.IniFile;
+import org.lucassouza.tools.PropertyTool;
 
 /**
  *
@@ -25,7 +25,7 @@ public class BasicPT<A> {
   protected Class<A> referencedClass;
 
   public BasicPT() {
-    IniFile iniFile = new IniFile();
+    PropertyTool iniFile = new PropertyTool();
     HashMap<String, String> properties = new HashMap<>();
     String dataBaseLocation;
     String systemPath = this.getClass().getProtectionDomain().getCodeSource()
@@ -34,9 +34,9 @@ public class BasicPT<A> {
 
     try {
       if (system.getParent().contains("target")) {
-        iniFile.readFile("C:/virtual/LeitorFipeHTTP/config.ini");
+        iniFile.readPropertyFile("C:/virtual/LeitorFipeHTTP/config.ini");
       } else {
-        iniFile.readFile(system.getParent() + "/config.ini");
+        iniFile.readPropertyFile(system.getParent() + "/config.ini");
       }
     } catch (IOException ex) {
       Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
