@@ -1,20 +1,45 @@
 package org.lucassouza.vehiclereader.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import org.eclipse.persistence.annotations.Customizer;
+import org.lucassouza.vehiclereader.model.customizer.YearPriceCT;
 import org.lucassouza.vehiclereader.type.FuelType;
 
 /**
  *
  * @author Lucas Souza [sorackb@gmail.com]
  */
-public class YearPrice {
 
+@Entity
+@Table(name = "fipe.tb_year_price")
+@Customizer(YearPriceCT.class)
+public class YearPrice implements Serializable {
+
+  @Id
   private Integer id;
+  @ManyToOne
+  @JoinColumn(name = "id_model")
   private Model model;
+  @ManyToOne
+  @JoinColumn(name = "id_reference")
   private Reference reference;
   private Integer year;
   private Float price;
+  @Enumerated(EnumType.ORDINAL)
+  @Column(name = "id_fuel_type")
   private FuelType fuelType;
+  @Temporal(javax.persistence.TemporalType.DATE)
+  @Column(name = "reading_date")
   private Date readingDate;
   private static final long serialVersionUID = 1;
 
