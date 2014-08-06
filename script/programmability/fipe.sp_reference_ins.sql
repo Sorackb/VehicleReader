@@ -1,14 +1,7 @@
-if not exists(select p.object_id
-                from sys.procedures p
-               inner join sys.schemas s
-                  on s.schema_id = p.schema_id
-               where s.name = 'fipe'
-                 and p.name = 'sp_reference_ins')
+if object_id('fipe.sp_reference_ins', 'P') is null
 begin
-  declare @sql nvarchar(1000);
-  set @sql = 'create procedure fipe.sp_reference_ins as';
-  execute sp_executesql @sql;
-end;
+  exec('create procedure fipe.sp_reference_ins as');
+end 
 go
 
 alter procedure fipe.sp_reference_ins

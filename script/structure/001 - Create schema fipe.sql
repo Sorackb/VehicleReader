@@ -1,56 +1,40 @@
-if not exists(select t.object_id
-                from sys.tables t
-               inner join sys.schemas s on s.schema_id = t.schema_id
-               where s.name = 'fipe'
-                 and t.name = 'tb_vehicle_classification')
+if object_id('fipe.tb_vehicle_classification', 'U') is null
 begin
   create table fipe.tb_vehicle_classification(
-    id          int         not null,
+    id             int         not null,
     description_en varchar(15) not null,
-	description_pt varchar(15) not null,
-    constraint  pk_vehicle_classification primary key(id));
+    description_pt varchar(15) not null,
+    constraint pk_vehicle_classification primary key(id));
 end;
 go
 
-if not exists(select t.object_id
-                from sys.tables t
-               inner join sys.schemas s on s.schema_id = t.schema_id
-               where s.name = 'fipe'
-                 and t.name = 'tb_fuel_type')
+if object_id('fipe.tb_fuel_type', 'U') is null
 begin
   create table fipe.tb_fuel_type(
     id             int         not null,
     description_en varchar(30) not null,
-	description_pt varchar(30) not null,
+    description_pt varchar(30) not null,
     constraint  pk_tb_fuel_type primary key(id));
 end;
 go
 
-if not exists(select t.object_id
-                from sys.tables t
-               inner join sys.schemas s on s.schema_id = t.schema_id
-               where s.name = 'fipe'
-                 and t.name = 'tb_reference_situation')
+if object_id('fipe.tb_reference_situation', 'U') is null
 begin
   create table fipe.tb_reference_situation(
     id             int         not null,
     description_en varchar(15) not null,
-	description_pt varchar(15) not null,
+    description_pt varchar(15) not null,
     constraint  pk_reference_situation primary key(id));
 end;
 go
 
-if not exists(select t.object_id
-                from sys.tables t
-               inner join sys.schemas s on s.schema_id = t.schema_id
-               where s.name = 'fipe'
-                 and t.name = 'tb_reference')
+if object_id('fipe.tb_reference', 'U') is null
 begin
   create table fipe.tb_reference(
     id                     int not null,
     id_reference_situation int not null,
     description_en         varchar(15),
-	description_pt         varchar(15),
+    description_pt         varchar(15),
     month                  int not null,
     year                   int not null,
     constraint pk_reference primary key(id),
@@ -59,11 +43,7 @@ begin
 end;
 go
 
-if not exists(select t.object_id
-                from sys.tables t
-               inner join sys.schemas s on s.schema_id = t.schema_id
-               where s.name = 'fipe'
-                 and t.name = 'tb_brand')
+if object_id('fipe.tb_brand', 'U') is null
 begin
   create table fipe.tb_brand(
     id          int         not null,
@@ -72,11 +52,7 @@ begin
 end;
 go
 
-if not exists(select t.object_id
-                from sys.tables t
-               inner join sys.schemas s on s.schema_id = t.schema_id
-               where s.name = 'fipe'
-                 and t.name = 'tb_model')
+if object_id('fipe.tb_model', 'U') is null
 begin
   create table fipe.tb_model(
     id                        varchar(8)  not null,
@@ -91,11 +67,7 @@ begin
 end;
 go
 
-if not exists(select t.object_id
-                from sys.tables t
-               inner join sys.schemas s on s.schema_id = t.schema_id
-               where s.name = 'fipe'
-                 and t.name = 'tb_year_price')
+if object_id('fipe.tb_year_price', 'U') is null
 begin
   create table fipe.tb_year_price(
     id           int        not null,
