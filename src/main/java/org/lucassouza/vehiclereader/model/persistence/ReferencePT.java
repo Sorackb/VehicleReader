@@ -46,7 +46,7 @@ public class ReferencePT extends EclipseLinkPT<Reference> {
     result.addAll(this.readList(incompletedCondition, incompletedOrderBy));
 
     // Lê os PENDENTES
-    pendingCondition.put("situacaoReferencia", ReferenceSituation.PENDING);
+    pendingCondition.put("referenceSituation", ReferenceSituation.PENDING);
     pendingOrderBy.put("year", "desc");
     pendingOrderBy.put("month", "desc");
     result.addAll(this.readList(pendingCondition, pendingOrderBy));

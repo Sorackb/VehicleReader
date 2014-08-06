@@ -1,7 +1,7 @@
 if object_id('fipe.sp_reference_ins', 'P') is null
 begin
   exec('create procedure fipe.sp_reference_ins as');
-end 
+end
 go
 
 alter procedure fipe.sp_reference_ins
@@ -16,7 +16,7 @@ begin
 
   select @vid_reference_situation = rs.id
     from fipe.tb_reference_situation rs
-   where rs.description = 'Pending';
+   where rs.description_en = 'Pending';
 
   -- Search for the next code if the parameter is null
   if @pid is null
@@ -32,7 +32,7 @@ begin
   begin
     insert into fipe.tb_reference(id,
                                   id_reference_situation,
-                                  description,
+                                  description_pt,
                                   month,
                                   year)
                             values(@pid,

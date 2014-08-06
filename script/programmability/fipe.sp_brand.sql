@@ -1,7 +1,7 @@
 if object_id('fipe.sp_brand_ins', 'P') is null
 begin
   exec('create procedure fipe.sp_brand_ins as');
-end 
+end
 go
 
 alter procedure fipe.sp_brand_ins

@@ -7,7 +7,7 @@ package org.lucassouza.vehiclereader.type;
 
 /**
  *
- * @author Lucas Souza <lucas.souza@virtual.inf.br>
+ * @author Lucas Souza [sorackb@gmail.com]
  */
 public enum VehicleClassification {
 

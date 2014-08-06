@@ -58,6 +58,7 @@ public class BrandBR extends BasicBR {
     for (Brand brand : result) {
       this.interaction.setBrandId(brand.getId());
       this.modelBR.readAll(classification, reference, brand);
+      this.informIncrement();
     }
 
     return result;

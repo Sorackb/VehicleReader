@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.lucassouza.vehiclereader.type;
 
 /**
@@ -37,7 +33,7 @@ public enum FuelType {
     return result;
   }
 
-  public Integer getCodigoBD() {
+  public Integer getIdDB() {
     return idDB;
   }
 }

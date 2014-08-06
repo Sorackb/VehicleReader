@@ -1,17 +1,32 @@
 package org.lucassouza.vehiclereader.pojo;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.eclipse.persistence.annotations.Customizer;
+import org.lucassouza.vehiclereader.model.customizer.ReferenceCT;
 import org.lucassouza.vehiclereader.type.ReferenceSituation;
 
 /**
  *
  * @author Lucas Souza [sorackb@gmail.com]
  */
+@Entity
+@Table(name = "fipe.tb_reference")
+@Customizer(ReferenceCT.class)
 public class Reference {
 
+  @Id
   private Integer id;
+  @Column(name = "description_pt")
   private String description;
   private Integer year;
   private Integer month;
+  @Enumerated(EnumType.ORDINAL)
+  @Column(name = "id_reference_situation")
   private ReferenceSituation referenceSituation;
   private static final long serialVersionUID = 1;
 
