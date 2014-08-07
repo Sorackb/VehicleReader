@@ -23,8 +23,7 @@ public class BrandBR extends BasicBR {
   private Brand lastBrand;
   private Boolean proceed;
 
-  public BrandBR(ModelBR modelBR, Interaction interaction, Communicable observer) {
-    this.observer = observer;
+  public BrandBR(ModelBR modelBR, Interaction interaction) {
     this.resourceType = ResourceType.BRAND;
     this.brandPT = new BrandPT();
     this.interaction = interaction;

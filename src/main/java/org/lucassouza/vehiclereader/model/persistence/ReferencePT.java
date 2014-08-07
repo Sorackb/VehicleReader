@@ -2,7 +2,6 @@ package org.lucassouza.vehiclereader.model.persistence;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import org.lucassouza.dao.EclipseLinkPT;
 import org.lucassouza.vehiclereader.pojo.Reference;
 import org.lucassouza.vehiclereader.type.ReferenceSituation;
 import org.lucassouza.vehiclereader.utils.Configuration;
@@ -11,7 +10,7 @@ import org.lucassouza.vehiclereader.utils.Configuration;
  *
  * @author Lucas Souza [sorackb@gmail.com]
  */
-public class ReferencePT extends EclipseLinkPT<Reference> {
+public class ReferencePT extends ReaderEclipseLinkPT<Reference> {
 
   public ReferencePT() {
     super(Configuration.getPUName(), Configuration.getBDConfig());

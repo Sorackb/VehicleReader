@@ -1,5 +1,7 @@
 package org.lucassouza.vehiclereader.model.businessrule;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.lucassouza.vehiclereader.controller.Communicable;
 import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.type.ResourceType;
@@ -11,18 +13,30 @@ import org.lucassouza.vehiclereader.type.ResourceType;
 public class BasicBR {
 
   protected ResourceType resourceType;
-  protected Communicable observer;
+  protected List<Communicable> observerList;
   protected Interaction interaction;
 
+  public void communicateInterest(Communicable newObserver) {
+    if (this.observerList == null) {
+      this.observerList = new ArrayList<>();
+    }
+
+    this.observerList.add(newObserver);
+  }
+
   protected void informAmount(Integer amount) {
-    if (this.observer != null) {
-      this.observer.informAmount(this.resourceType, amount);
+    if (this.observerList != null) {
+      for (Communicable observer : this.observerList) {
+        observer.informAmount(this.resourceType, amount);
+      }
     }
   }
 
   protected void informIncrement() {
-    if (this.observer != null) {
-      this.observer.informIncrement(this.resourceType);
+    if (this.observerList != null) {
+      for (Communicable observer : this.observerList) {
+        observer.informIncrement(this.resourceType);
+      }
     }
   }
 }

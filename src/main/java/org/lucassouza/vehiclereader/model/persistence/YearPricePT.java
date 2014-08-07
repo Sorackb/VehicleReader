@@ -1,7 +1,6 @@
 package org.lucassouza.vehiclereader.model.persistence;
 
 import java.util.LinkedHashMap;
-import org.lucassouza.dao.EclipseLinkPT;
 import org.lucassouza.vehiclereader.pojo.YearPrice;
 import org.lucassouza.vehiclereader.utils.Configuration;
 
@@ -9,7 +8,7 @@ import org.lucassouza.vehiclereader.utils.Configuration;
  *
  * @author Lucas Souza [sorackb@gmail.com]
  */
-public class YearPricePT extends EclipseLinkPT<YearPrice> {
+public class YearPricePT extends ReaderEclipseLinkPT<YearPrice> {
 
   public YearPricePT() {
     super(Configuration.getPUName(), Configuration.getBDConfig());

@@ -23,8 +23,7 @@ public class YearPriceBR extends BasicBR {
   private YearPrice lastYearPrice;
   private Boolean proceed;
 
-  public YearPriceBR(Interaction interaction, Communicable observer) {
-    this.observer = observer;
+  public YearPriceBR(Interaction interaction) {
     this.resourceType = ResourceType.YEAR_PRICE;
     this.interaction = interaction;
     this.yearPricePT = new YearPricePT();

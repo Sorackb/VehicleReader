@@ -30,8 +30,7 @@ public class ReferenceBR extends BasicBR {
   private Boolean proceedClassification;
   private Boolean proceedReference;
 
-  public ReferenceBR(BrandBR brandBR, Interaction interaction, Communicable observer) {
-    this.observer = observer;
+  public ReferenceBR(BrandBR brandBR, Interaction interaction) {
     this.resourceType = ResourceType.REFERENCE;
     this.referencePT = new ReferencePT();
     this.interaction = interaction;
@@ -77,8 +76,10 @@ public class ReferenceBR extends BasicBR {
         reference.setReferenceSituation(ReferenceSituation.INCOMPLETE);
         this.referencePT.update(reference);
 
-        if (this.observer != null) {
-          this.observer.informAmount(ResourceType.VEHICLE_CLASSIFICATION, ResourceType.values().length - 1);
+        if (this.observerList != null) {
+          for (Communicable observer : this.observerList) {
+            observer.informAmount(ResourceType.VEHICLE_CLASSIFICATION, ResourceType.values().length - 1);
+          }
         }
 
         for (VehicleClassification classification : VehicleClassification.values()) {
@@ -93,8 +94,10 @@ public class ReferenceBR extends BasicBR {
               this.continueReading(reference, classification);
             }
 
-            if (this.observer != null) {
-              this.observer.informIncrement(ResourceType.VEHICLE_CLASSIFICATION);
+            if (this.observerList != null) {
+              for (Communicable observer : this.observerList) {
+                observer.informIncrement(ResourceType.VEHICLE_CLASSIFICATION);
+              }
             }
           }
         }

@@ -24,8 +24,7 @@ public class ModelBR extends BasicBR {
   private Model lastModel;
   private Boolean proceed;
 
-  public ModelBR(YearPriceBR yearPriceBR, Interaction interaction, Communicable observer) {
-    this.observer = observer;
+  public ModelBR(YearPriceBR yearPriceBR, Interaction interaction) {
     this.resourceType = ResourceType.MODEL;
     this.modelPT = new ModelPT();
     this.interaction = interaction;

@@ -29,16 +29,16 @@ public class Reader extends Thread implements Communicable {
     ReferenceBR referenceBR;
     YearPrice lastYearPrice;
 
-    // Configuração de proxy
-    /*System.setProperty("http.proxyHost", "192.168.111.251");
-     System.setProperty("http.proxyPort", "3128");
-     System.setProperty("http.proxyUser", "lucas.souza");
-     System.setProperty("http.proxyPassword", "swordfish");*/
     interaction = new Interaction();
-    yearPriceBR = new YearPriceBR(interaction, this.observer);
-    modelBR = new ModelBR(yearPriceBR, interaction, this.observer);
-    brandBR = new BrandBR(modelBR, interaction, this.observer);
-    referenceBR = new ReferenceBR(brandBR, interaction, this.observer);
+    yearPriceBR = new YearPriceBR(interaction);
+    modelBR = new ModelBR(yearPriceBR, interaction);
+    brandBR = new BrandBR(modelBR, interaction);
+    referenceBR = new ReferenceBR(brandBR, interaction);
+    
+    yearPriceBR.communicateInterest(this.observer);
+    modelBR.communicateInterest(this.observer);
+    brandBR.communicateInterest(this.observer);
+    referenceBR.communicateInterest(this.observer);
 
     lastYearPrice = yearPriceBR.searchLast();
 
