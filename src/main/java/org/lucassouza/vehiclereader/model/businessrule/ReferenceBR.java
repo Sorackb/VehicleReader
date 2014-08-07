@@ -60,7 +60,7 @@ public class ReferenceBR extends BasicBR {
 
     this.informAmount(result.size() + completedList.size());
 
-    for (Reference reference : completedList) {
+    for (int i = 0; i < completedList.size(); i++) {
       this.informIncrement();
     }
 
