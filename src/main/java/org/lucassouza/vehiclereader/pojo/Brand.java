@@ -1,5 +1,6 @@
 package org.lucassouza.vehiclereader.pojo;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,7 +14,7 @@ import org.lucassouza.vehiclereader.model.customizer.BrandCT;
 @Entity
 @Table(name = "fipe.tb_brand")
 @Customizer(BrandCT.class)
-public class Brand {
+public class Brand implements Serializable {
   @Id
   private Integer id;
   private String description;

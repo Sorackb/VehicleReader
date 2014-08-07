@@ -1,5 +1,6 @@
 package org.lucassouza.vehiclereader.pojo;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,7 +20,7 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
 @Entity
 @Table(name = "fipe.tb_model")
 @Customizer(ModelCT.class)
-public class Model {
+public class Model implements Serializable {
 
   @Id
   private String id;

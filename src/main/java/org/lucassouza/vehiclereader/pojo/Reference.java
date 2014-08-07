@@ -1,5 +1,6 @@
 package org.lucassouza.vehiclereader.pojo;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,7 +18,7 @@ import org.lucassouza.vehiclereader.type.ReferenceSituation;
 @Entity
 @Table(name = "fipe.tb_reference")
 @Customizer(ReferenceCT.class)
-public class Reference {
+public class Reference implements Serializable {
 
   @Id
   private Integer id;
