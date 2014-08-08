@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.lucassouza.vehiclereader.controller.Communicable;
 import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.model.persistence.YearPricePT;
 import org.lucassouza.vehiclereader.pojo.Model;
@@ -20,18 +19,16 @@ import org.lucassouza.vehiclereader.type.ResourceType;
 public class YearPriceBR extends BasicBR {
 
   private final YearPricePT yearPricePT;
-  private YearPrice lastYearPrice;
-  private Boolean proceed;
 
-  public YearPriceBR(Interaction interaction) {
-    this.resourceType = ResourceType.YEAR_PRICE;
-    this.interaction = interaction;
+  public YearPriceBR() {
     this.yearPricePT = new YearPricePT();
+    this.resourceType = ResourceType.YEAR_PRICE;
     this.proceed = true;
   }
 
-  public List<YearPrice> readAll(Reference reference, Model model) {
-    Elements yearPriceList = this.interaction.getPageSource().select(
+  public List<YearPrice> readAll(Interaction interaction, Reference reference,
+          Model model) {
+    Elements yearPriceList = interaction.getPageSource().select(
             "select#ddlAnoValor > option:not(:nth-of-type(1))");
     List<YearPrice> result = new ArrayList<>();
     String id;
@@ -43,8 +40,8 @@ public class YearPriceBR extends BasicBR {
       id = yearPriceElement.attr("value");
 
       if (this.proceed) {
-        this.interaction.setYearPriceId(Integer.parseInt(id));
-        yearPrice = this.convert(reference, model);
+        interaction.setYearPriceId(Integer.parseInt(id));
+        yearPrice = this.convert(interaction, reference, model);
         result.add(yearPrice);
       }
 
@@ -64,13 +61,14 @@ public class YearPriceBR extends BasicBR {
     return result;
   }
 
-  private YearPrice convert(Reference reference, Model model) {
-    Integer id = Integer.parseInt(this.interaction.getPageSource().select(
+  private YearPrice convert(Interaction interaction, Reference reference,
+          Model model) {
+    Integer id = Integer.parseInt(interaction.getPageSource().select(
             "select#ddlAnoValor > option[selected=selected]").first().attr("value"));
-    Float value = Float.parseFloat(this.interaction.getPageSource().select(
+    Float value = Float.parseFloat(interaction.getPageSource().select(
             "span#lblValor").first().text().replace("R$", "").replace(".", "")
             .replace(",", ".").trim());
-    String description = this.interaction.getPageSource().select("span#lblAnoModelo").text();
+    String description = interaction.getPageSource().select("span#lblAnoModelo").text();
     String descriptionPart = description.substring(0, 4);
     YearPrice result = new YearPrice();
     String fuel = null;
@@ -99,13 +97,5 @@ public class YearPriceBR extends BasicBR {
 
   public YearPrice searchLast() {
     return this.yearPricePT.searchLast();
-  }
-
-  public void setLastYearPrice(YearPrice lastYearPrice) {
-    if (lastYearPrice != null) {
-      this.proceed = false;
-    }
-
-    this.lastYearPrice = lastYearPrice;
   }
 }

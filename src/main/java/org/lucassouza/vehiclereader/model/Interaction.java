@@ -80,12 +80,7 @@ public class Interaction {
         this.referenceId = Integer.parseInt(this.getElementAttr(
                 "select#ddlTabelaReferencia > option[selected=selected]", "value"));
       } catch (IOException ex) {
-        // Aguarda 1 segundo antes de fazer requisição novamente
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException exIE) {
-          Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, exIE);
-        }
+        // Tenta novamente
         this.openPage();
       }
     }
@@ -117,12 +112,7 @@ public class Interaction {
         this.viewState = this.getVariable("__VIEWSTATE");
         this.eventValidation = this.getVariable("__EVENTVALIDATION");
       } catch (IOException ex) {
-        // Aguarda 1 segundo antes de fazer requisição novamente
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException iEx) {
-          Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, iEx);
-        }
+        // Tenta novamente
         this.loadPage(event);
       }
     }

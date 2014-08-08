@@ -13,6 +13,7 @@ import org.lucassouza.vehiclereader.controller.Communicable;
 import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.model.persistence.ReferencePT;
 import org.lucassouza.vehiclereader.pojo.Reference;
+import org.lucassouza.vehiclereader.pojo.YearPrice;
 import org.lucassouza.vehiclereader.type.ReferenceSituation;
 import org.lucassouza.vehiclereader.type.ResourceType;
 import org.lucassouza.vehiclereader.type.VehicleClassification;
@@ -23,40 +24,37 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
  */
 public class ReferenceBR extends BasicBR {
 
-  private final ReferencePT referencePT;
-  private final BrandBR brandRN;
   private Reference lastReference;
   private VehicleClassification lastClassification;
   private Boolean proceedClassification;
   private Boolean proceedReference;
 
-  public ReferenceBR(BrandBR brandBR, Interaction interaction) {
+  public ReferenceBR() {
     this.resourceType = ResourceType.REFERENCE;
-    this.referencePT = new ReferencePT();
-    this.interaction = interaction;
-    this.brandRN = brandBR;
     this.proceedReference = true;
     this.proceedClassification = true;
   }
 
   public LinkedHashSet<Reference> readAll() {
+    Interaction interaction = new Interaction();
+    ReferencePT referencePT = new ReferencePT();
     LinkedHashSet<Reference> result;
     LinkedHashSet<Reference> completedList;
     Elements referenceList;
 
     // Utiliza um tipo padrão para ler as referências
-    this.interaction.setClassification(VehicleClassification.CAR);
-    referenceList = this.interaction.getPageSource().select(
+    interaction.setClassification(VehicleClassification.CAR);
+    referenceList = interaction.getPageSource().select(
             "select#ddlTabelaReferencia > option");
 
     for (Element referenceElement : referenceList) {
       Reference reference = this.convert(referenceElement);
       // Caso nenhum seja passado executa todas as referências
-      this.referencePT.create(reference);
+      referencePT.create(reference);
     }
 
-    completedList = this.referencePT.readCompleted();
-    result = this.referencePT.readPending();
+    completedList = referencePT.readCompleted();
+    result = referencePT.readPending();
 
     this.informAmount(result.size() + completedList.size());
 
@@ -74,7 +72,7 @@ public class ReferenceBR extends BasicBR {
       if (this.proceedReference) {
 
         reference.setReferenceSituation(ReferenceSituation.INCOMPLETE);
-        this.referencePT.update(reference);
+        referencePT.update(reference);
 
         if (this.observerList != null) {
           for (Communicable observer : this.observerList) {
@@ -90,8 +88,10 @@ public class ReferenceBR extends BasicBR {
             }
 
             if (this.proceedClassification) {
-              this.interaction.setClassification(classification);
-              this.continueReading(reference, classification);
+              interaction = new Interaction();
+
+              interaction.setClassification(classification);
+              this.continueReading(interaction, reference, classification);
             }
 
             if (this.observerList != null) {
@@ -103,7 +103,7 @@ public class ReferenceBR extends BasicBR {
         }
 
         reference.setReferenceSituation(ReferenceSituation.COMPLETE);
-        this.referencePT.update(reference);
+        referencePT.update(reference);
       }
 
       this.informIncrement();
@@ -112,12 +112,19 @@ public class ReferenceBR extends BasicBR {
     return result;
   }
 
-  private void continueReading(Reference reference, VehicleClassification classification) {
-    if (this.interaction.getElementAttr("select#ddlTabelaReferencia > option[value="
+  private void continueReading(Interaction interaction, Reference reference,
+          VehicleClassification classification) {
+    BrandBR brandBR = new BrandBR();
+
+    if (interaction.getElementAttr("select#ddlTabelaReferencia > option[value="
             + reference.getId() + "]", "selected").equals("")) {
-      this.interaction.setReferenceId(reference.getId());
+      interaction.setReferenceId(reference.getId());
     }
-    this.brandRN.readAll(classification, reference);
+
+    brandBR.setLast(this.lastYearPrice);
+    this.lastYearPrice = null;
+    brandBR.communicateInterest(this.observerList);
+    brandBR.readAll(interaction, classification, reference);
   }
 
   private Reference convert(Element reference) {
@@ -160,17 +167,14 @@ public class ReferenceBR extends BasicBR {
     return result;
   }
 
-  public void setLastReference(Reference lastReference) {
-    if (lastReference != null) {
-      this.proceedReference = false;
-    }
-    this.lastReference = lastReference;
-  }
+  @Override
+  public void setLast(YearPrice lastYearPrice) {
+    super.setLast(lastYearPrice);
 
-  public void setLastClassification(VehicleClassification lastClassification) {
-    if (lastClassification != null) {
+    if (lastYearPrice != null) {
       this.proceedClassification = false;
+      this.lastReference = lastYearPrice.getReference();
+      this.lastClassification = lastYearPrice.getModel().getVehicleClassification();
     }
-    this.lastClassification = lastClassification;
   }
 }

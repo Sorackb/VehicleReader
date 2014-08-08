@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.lucassouza.vehiclereader.controller.Communicable;
 import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.model.persistence.ModelPT;
 import org.lucassouza.vehiclereader.pojo.Brand;
 import org.lucassouza.vehiclereader.pojo.Model;
 import org.lucassouza.vehiclereader.pojo.Reference;
+import org.lucassouza.vehiclereader.pojo.YearPrice;
 import org.lucassouza.vehiclereader.type.ResourceType;
 import org.lucassouza.vehiclereader.type.VehicleClassification;
 
@@ -20,25 +20,27 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
 public class ModelBR extends BasicBR {
 
   private final ModelPT modelPT;
-  private final YearPriceBR yearPriceBR;
   private Model lastModel;
-  private Boolean proceed;
 
-  public ModelBR(YearPriceBR yearPriceBR, Interaction interaction) {
-    this.resourceType = ResourceType.MODEL;
+  public ModelBR() {
     this.modelPT = new ModelPT();
-    this.interaction = interaction;
-    this.yearPriceBR = yearPriceBR;
+    this.resourceType = ResourceType.MODEL;
     this.proceed = true;
   }
 
-  public List<Model> readAll(VehicleClassification classification, Reference reference,
+  public List<Model> readAll(Interaction interaction, VehicleClassification classification,
+          Reference reference,
           Brand brand) {
-    Elements modelList = this.interaction.getPageSource().select(
+    Elements modelList = interaction.getPageSource().select(
             "select#ddlModelo > option:not(:nth-of-type(1))");
     List<Model> result = new ArrayList<>();
+    YearPriceBR yearPriceBR = new YearPriceBR();
 
     this.informAmount(modelList.size());
+    
+    yearPriceBR.setLast(this.lastYearPrice);
+    this.lastYearPrice = null;
+    yearPriceBR.communicateInterest(this.observerList);
 
     for (Element modelElement : modelList) {
       Model model = this.convert(classification, brand, modelElement);
@@ -56,18 +58,19 @@ public class ModelBR extends BasicBR {
     }
 
     // Tentativa de acelerar o processo, não necessitando que a conexão seja aberta várias vezes
-    this.modelPT.create(result);
+    modelPT.create(result);
 
     for (Model model : result) {
-      this.interaction.setModelId(model.getId());
-      this.yearPriceBR.readAll(reference, model);
+      interaction.setModelId(model.getId());
+      yearPriceBR.readAll(interaction, reference, model);
       this.informIncrement();
     }
 
     return result;
   }
 
-  private Model convert(VehicleClassification classification, Brand brand, Element model) {
+  private Model convert(VehicleClassification classification, Brand brand,
+          Element model) {
     String fipe = model.attr("value");
     String description;
     Model result;
@@ -83,10 +86,12 @@ public class ModelBR extends BasicBR {
     return result;
   }
 
-  public void setLastModel(Model lastModel) {
-    if (lastModel != null) {
-      this.proceed = false;
+  @Override
+  public void setLast(YearPrice lastYearPrice) {
+    super.setLast(lastYearPrice);
+
+    if (lastYearPrice != null) {
+      this.lastModel = lastYearPrice.getModel();
     }
-    this.lastModel = lastModel;
   }
 }

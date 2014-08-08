@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.lucassouza.vehiclereader.controller.Communicable;
 import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.model.persistence.BrandPT;
 import org.lucassouza.vehiclereader.pojo.Brand;
 import org.lucassouza.vehiclereader.pojo.Reference;
+import org.lucassouza.vehiclereader.pojo.YearPrice;
 import org.lucassouza.vehiclereader.type.ResourceType;
 import org.lucassouza.vehiclereader.type.VehicleClassification;
 
@@ -18,25 +18,26 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
  */
 public class BrandBR extends BasicBR {
 
-  private final BrandPT brandPT;
-  private final ModelBR modelBR;
   private Brand lastBrand;
-  private Boolean proceed;
 
-  public BrandBR(ModelBR modelBR, Interaction interaction) {
+  public BrandBR() {
     this.resourceType = ResourceType.BRAND;
-    this.brandPT = new BrandPT();
-    this.interaction = interaction;
-    this.modelBR = modelBR;
     this.proceed = true;
   }
 
-  public List<Brand> readAll(VehicleClassification classification, Reference reference) {
-    Elements brandList = this.interaction.getPageSource().select(
+  public List<Brand> readAll(Interaction interaction, VehicleClassification classification,
+          Reference reference) {
+    Elements brandList = interaction.getPageSource().select(
             "select#ddlMarca > option:not(:nth-of-type(1))");
     List<Brand> result = new ArrayList<>();
+    BrandPT brandPT = new BrandPT();
+    ModelBR modelBR = new ModelBR();
 
     this.informAmount(brandList.size());
+    
+    modelBR.setLast(this.lastYearPrice);
+    this.lastYearPrice = null;
+    modelBR.communicateInterest(this.observerList);
 
     for (Element brandElement : brandList) {
       Brand brand = this.convert(brandElement);
@@ -52,11 +53,11 @@ public class BrandBR extends BasicBR {
       }
     }
 
-    this.brandPT.create(result);
+    brandPT.create(result);
 
     for (Brand brand : result) {
-      this.interaction.setBrandId(brand.getId());
-      this.modelBR.readAll(classification, reference, brand);
+      interaction.setBrandId(brand.getId());
+      modelBR.readAll(interaction, classification, reference, brand);
       this.informIncrement();
     }
 
@@ -77,11 +78,12 @@ public class BrandBR extends BasicBR {
     return result;
   }
 
-  public void setLastBrand(Brand lastBrand) {
-    if (lastBrand != null) {
-      this.proceed = false;
-    }
+  @Override
+  public void setLast(YearPrice lastYearPrice) {
+    super.setLast(lastYearPrice);
 
-    this.lastBrand = lastBrand;
+    if (lastYearPrice != null) {
+      this.lastBrand = lastYearPrice.getModel().getBrand();
+    }
   }
 }

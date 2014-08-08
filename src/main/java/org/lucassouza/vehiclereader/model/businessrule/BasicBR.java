@@ -3,18 +3,19 @@ package org.lucassouza.vehiclereader.model.businessrule;
 import java.util.ArrayList;
 import java.util.List;
 import org.lucassouza.vehiclereader.controller.Communicable;
-import org.lucassouza.vehiclereader.model.Interaction;
+import org.lucassouza.vehiclereader.pojo.YearPrice;
 import org.lucassouza.vehiclereader.type.ResourceType;
 
 /**
  *
  * @author Lucas Souza [sorackb@gmail.com]
  */
-public class BasicBR {
+public abstract class BasicBR {
 
   protected ResourceType resourceType;
   protected List<Communicable> observerList;
-  protected Interaction interaction;
+  protected YearPrice lastYearPrice;
+  protected Boolean proceed;
 
   public void communicateInterest(Communicable newObserver) {
     if (this.observerList == null) {
@@ -22,6 +23,10 @@ public class BasicBR {
     }
 
     this.observerList.add(newObserver);
+  }
+
+  public void communicateInterest(List<Communicable> newObserverList) {
+    this.observerList = newObserverList;
   }
 
   protected void informAmount(Integer amount) {
@@ -38,5 +43,13 @@ public class BasicBR {
         observer.informIncrement(this.resourceType);
       }
     }
+  }
+
+  public void setLast(YearPrice lastYearPrice) {
+    this.lastYearPrice = lastYearPrice;
+
+    if (lastYearPrice != null) {
+      this.proceed = false;
+    } 
   }
 }
