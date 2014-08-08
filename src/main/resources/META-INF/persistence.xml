@@ -8,6 +8,8 @@
     <class>org.lucassouza.vehiclereader.pojo.YearPrice</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+      <property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
+      <property name="eclipselink.jdbc.batch-writing.size" value="1000"/>
     </properties>
   </persistence-unit>
 </persistence>
