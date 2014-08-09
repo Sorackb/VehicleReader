@@ -1,6 +1,9 @@
 package org.lucassouza.vehiclereader.view;
 
 import java.awt.AWTException;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -11,9 +14,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.lucassouza.vehiclereader.controller.Communicable;
 import org.lucassouza.vehiclereader.controller.Reader;
 import org.lucassouza.vehiclereader.type.ResourceType;
@@ -25,6 +36,8 @@ import org.lucassouza.vehiclereader.type.ResourceType;
 public class FrmReader extends JFrame implements Communicable {
 
   private static final long serialVersionUID = 1;
+  private final List<Integer> speedList = new ArrayList<>();
+  private Long tick;
   private Integer yearPriceByMinute;
 
   /**
@@ -37,6 +50,41 @@ public class FrmReader extends JFrame implements Communicable {
     this.pgbBrand.setStringPainted(true);
     this.pgbModel.setStringPainted(true);
     this.pgbYearPrice.setStringPainted(true);
+    this.redrawnChart();
+  }
+
+  private void redrawnChart() {
+    ChartPanel chartPanel;
+    JFreeChart chart;
+    XYSeriesCollection dataset;
+    XYSeries xySeries = new XYSeries("Velocidade");
+
+    for (int i = 0; i < this.speedList.size(); i++) {
+      Long index = this.tick / 6L;
+
+      if (index > 100L) {
+        index = index - this.speedList.size() + i;
+      } else {
+        index = new Long(i + 1);
+      }
+
+      xySeries.add(index, this.speedList.get(i));
+    }
+
+    this.pnlChart.removeAll();
+    this.pnlChart.revalidate();
+    dataset = new XYSeriesCollection();
+    dataset.addSeries(xySeries);
+    chart = ChartFactory.createXYLineChart("Velocidade de leitura", "Minutos de execução",
+            "Quantidade Ano/Modelo", dataset, PlotOrientation.VERTICAL, true,
+            true, false);
+    chart.removeLegend();
+    //chart.getPlot().setBackgroundPaint(Color.WHITE);
+    //chart.getPlot().setOutlinePaint(Color.RED);
+    chartPanel = new ChartPanel(chart);
+    chartPanel.setPreferredSize(new Dimension(600, 300));
+    this.pnlChart.setLayout(new BorderLayout());
+    this.pnlChart.add(chartPanel, BorderLayout.CENTER);
   }
 
   private static void startSystemTray() {
@@ -56,8 +104,8 @@ public class FrmReader extends JFrame implements Communicable {
     final PopupMenu popup = new PopupMenu();
 
     //Cria o icone da tray
-    final TrayIcon trayIcon =
-            new TrayIcon(imgLogo, frame.getTitle(), popup);
+    final TrayIcon trayIcon
+            = new TrayIcon(imgLogo, frame.getTitle(), popup);
     final SystemTray tray = SystemTray.getSystemTray();
 
     // cria os itens do menu
@@ -131,6 +179,7 @@ public class FrmReader extends JFrame implements Communicable {
     lblTipoVeiculo = new javax.swing.JLabel();
     pgbVehicleClassification = new javax.swing.JProgressBar();
     lblMedia = new javax.swing.JLabel();
+    pnlChart = new javax.swing.JPanel();
 
     btnIniciar.setText("Iniciar");
     btnIniciar.addActionListener(new java.awt.event.ActionListener() {
@@ -148,6 +197,17 @@ public class FrmReader extends JFrame implements Communicable {
     lblReferencia.setText("Referências:");
 
     lblTipoVeiculo.setText("Veículos:");
+
+    javax.swing.GroupLayout pnlChartLayout = new javax.swing.GroupLayout(pnlChart);
+    pnlChart.setLayout(pnlChartLayout);
+    pnlChartLayout.setHorizontalGroup(
+      pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 0, Short.MAX_VALUE)
+    );
+    pnlChartLayout.setVerticalGroup(
+      pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 255, Short.MAX_VALUE)
+    );
 
     javax.swing.GroupLayout pnlGeralLayout = new javax.swing.GroupLayout(pnlGeral);
     pnlGeral.setLayout(pnlGeralLayout);
@@ -171,7 +231,8 @@ public class FrmReader extends JFrame implements Communicable {
           .addComponent(pgbReference, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(lblMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap(265, Short.MAX_VALUE))
+      .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     pnlGeralLayout.setVerticalGroup(
       pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,7 +260,8 @@ public class FrmReader extends JFrame implements Communicable {
         .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
           .addComponent(pgbReference, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(lblReferencia))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     getContentPane().add(pnlGeral, java.awt.BorderLayout.CENTER);
@@ -211,6 +273,7 @@ public class FrmReader extends JFrame implements Communicable {
     Reader leitor = new Reader(this);
 
     this.yearPriceByMinute = 0;
+    this.tick = 0L;
     new javax.swing.Timer(10000, new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -218,6 +281,18 @@ public class FrmReader extends JFrame implements Communicable {
 
         lblMedia.setText(mediaMin.toString() + "/min.");
         yearPriceByMinute = 0;
+        tick++;
+
+        if ((tick % 6L) == 0L) {
+          if (speedList.size() >= 100) {
+            speedList.remove(0);
+          }
+          speedList.add(mediaMin);
+
+          if ((tick / 6L) >= 2) {
+            redrawnChart();
+          }
+        }
       }
     }).start();
     leitor.start();
@@ -272,6 +347,7 @@ public class FrmReader extends JFrame implements Communicable {
   private javax.swing.JProgressBar pgbReference;
   private javax.swing.JProgressBar pgbVehicleClassification;
   private javax.swing.JProgressBar pgbYearPrice;
+  private javax.swing.JPanel pnlChart;
   private javax.swing.JPanel pnlGeral;
   // End of variables declaration//GEN-END:variables
 
