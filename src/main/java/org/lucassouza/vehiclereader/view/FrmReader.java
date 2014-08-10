@@ -2,7 +2,6 @@ package org.lucassouza.vehiclereader.view;
 
 import java.awt.AWTException;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MenuItem;
@@ -79,8 +78,6 @@ public class FrmReader extends JFrame implements Communicable {
             "Quantidade Ano/Modelo", dataset, PlotOrientation.VERTICAL, true,
             true, false);
     chart.removeLegend();
-    //chart.getPlot().setBackgroundPaint(Color.WHITE);
-    //chart.getPlot().setOutlinePaint(Color.RED);
     chartPanel = new ChartPanel(chart);
     chartPanel.setPreferredSize(new Dimension(600, 300));
     this.pnlChart.setLayout(new BorderLayout());
@@ -169,7 +166,6 @@ public class FrmReader extends JFrame implements Communicable {
     pnlGeral = new javax.swing.JPanel();
     pgbReference = new javax.swing.JProgressBar();
     btnIniciar = new javax.swing.JToggleButton();
-    pgbBrand = new javax.swing.JProgressBar();
     pgbModel = new javax.swing.JProgressBar();
     pgbYearPrice = new javax.swing.JProgressBar();
     lblAnoValor = new javax.swing.JLabel();
@@ -180,6 +176,10 @@ public class FrmReader extends JFrame implements Communicable {
     pgbVehicleClassification = new javax.swing.JProgressBar();
     lblMedia = new javax.swing.JLabel();
     pnlChart = new javax.swing.JPanel();
+    pgbBrand = new javax.swing.JProgressBar();
+
+    pnlGeral.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+    pnlGeral.add(pgbReference, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 100, -1));
 
     btnIniciar.setText("Iniciar");
     btnIniciar.addActionListener(new java.awt.event.ActionListener() {
@@ -187,16 +187,26 @@ public class FrmReader extends JFrame implements Communicable {
         btnIniciarActionPerformed(evt);
       }
     });
+    pnlGeral.add(btnIniciar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, -1, -1));
+    pnlGeral.add(pgbModel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 100, -1));
+    pnlGeral.add(pgbYearPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 100, -1));
 
     lblAnoValor.setText("Ano/Valores:");
+    pnlGeral.add(lblAnoValor, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 70, -1, -1));
 
     lblModelo.setText("Modelos:");
+    pnlGeral.add(lblModelo, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, -1, -1));
 
     lblMarca.setText("Marcas:");
+    pnlGeral.add(lblMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, -1, -1));
 
     lblReferencia.setText("Referências:");
+    pnlGeral.add(lblReferencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, -1, -1));
 
     lblTipoVeiculo.setText("Veículos:");
+    pnlGeral.add(lblTipoVeiculo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
+    pnlGeral.add(pgbVehicleClassification, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 100, -1));
+    pnlGeral.add(lblMedia, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 70, 63, 14));
 
     javax.swing.GroupLayout pnlChartLayout = new javax.swing.GroupLayout(pnlChart);
     pnlChart.setLayout(pnlChartLayout);
@@ -206,63 +216,11 @@ public class FrmReader extends JFrame implements Communicable {
     );
     pnlChartLayout.setVerticalGroup(
       pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 255, Short.MAX_VALUE)
+      .addGap(0, 320, Short.MAX_VALUE)
     );
 
-    javax.swing.GroupLayout pnlGeralLayout = new javax.swing.GroupLayout(pnlGeral);
-    pnlGeral.setLayout(pnlGeralLayout);
-    pnlGeralLayout.setHorizontalGroup(
-      pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(pnlGeralLayout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(lblAnoValor)
-          .addComponent(lblModelo)
-          .addComponent(lblMarca)
-          .addComponent(lblTipoVeiculo)
-          .addComponent(lblReferencia)
-          .addComponent(btnIniciar))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(pgbYearPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(pgbModel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(pgbBrand, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(pgbVehicleClassification, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(pgbReference, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(lblMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(265, Short.MAX_VALUE))
-      .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-    );
-    pnlGeralLayout.setVerticalGroup(
-      pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(pnlGeralLayout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(btnIniciar)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(lblAnoValor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(pgbYearPrice, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(lblMedia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addGap(10, 10, 10)
-        .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(pgbModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(lblModelo))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-          .addComponent(pgbBrand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(lblMarca))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-          .addComponent(pgbVehicleClassification, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(lblTipoVeiculo))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-          .addComponent(pgbReference, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(lblReferencia))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
+    pnlGeral.add(pnlChart, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 124, 560, 320));
+    pnlGeral.add(pgbBrand, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 100, -1));
 
     getContentPane().add(pnlGeral, java.awt.BorderLayout.CENTER);
 
