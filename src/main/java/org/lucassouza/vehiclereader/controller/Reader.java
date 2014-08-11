@@ -1,9 +1,14 @@
 package org.lucassouza.vehiclereader.controller;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import org.lucassouza.vehiclereader.model.businessrule.ReferenceBR;
 import org.lucassouza.vehiclereader.model.businessrule.YearPriceBR;
 import org.lucassouza.vehiclereader.pojo.YearPrice;
 import org.lucassouza.vehiclereader.type.ResourceType;
+import org.lucassouza.vehiclereader.utils.Configuration;
 
 /**
  *
@@ -24,7 +29,7 @@ public class Reader extends Thread implements Communicable {
 
     yearPriceBR = new YearPriceBR();
     referenceBR = new ReferenceBR();
-    
+
     referenceBR.communicateInterest(this.observer);
     lastYearPrice = yearPriceBR.searchLast();
     referenceBR.setLast(lastYearPrice);
@@ -33,7 +38,31 @@ public class Reader extends Thread implements Communicable {
 
   @Override
   public void run() {
-    this.evaluate();
+    String systemPath;
+    File system;
+    FileWriter fileWriter;
+    PrintWriter printWriter;
+
+    try {
+      this.evaluate();
+    // Grava o erro em um arquivo de log (error_log.txt)
+    } catch (Exception ex) {
+      try {
+        systemPath = Configuration.class.getProtectionDomain().getCodeSource()
+                .getLocation().getPath();
+        system = new File(systemPath);
+
+        if (system.getParent().contains("target")) {
+          fileWriter = new FileWriter("C:/VehicleReader/error_log.txt", true);
+        } else {
+          fileWriter = new FileWriter(system.getParent() + "/error_log.txt", true);
+        }
+        printWriter = new PrintWriter(fileWriter);
+        ex.printStackTrace(printWriter);
+      } catch (IOException ex1) {
+        //Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex1);
+      }
+    }
   }
 
   @Override

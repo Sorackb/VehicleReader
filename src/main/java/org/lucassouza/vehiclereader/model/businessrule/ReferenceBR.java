@@ -76,7 +76,7 @@ public class ReferenceBR extends BasicBR {
 
         if (this.observerList != null) {
           for (Communicable observer : this.observerList) {
-            observer.informAmount(ResourceType.VEHICLE_CLASSIFICATION, ResourceType.values().length - 1);
+            observer.informAmount(ResourceType.VEHICLE_CLASSIFICATION, VehicleClassification.values().length - 1);
           }
         }
 

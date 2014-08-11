@@ -1,8 +1,6 @@
 package org.lucassouza.vehiclereader.model;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -28,16 +26,22 @@ public class Interaction {
 
   private enum Event {
 
-    REFERENCE("ScriptManager1|ddlTabelaReferencia", "ddlTabelaReferencia"),
-    BRAND("UdtMarca|ddlMarca", "ddlMarca"),
-    MODEL("updModelo|ddlModelo", "ddlModelo"),
-    YEAR_PRICE("updAnoValor|ddlAnoValor", "ddlAnoValor");
+    REFERENCE(0, "ScriptManager1|ddlTabelaReferencia", "ddlTabelaReferencia"),
+    BRAND(1, "UdtMarca|ddlMarca", "ddlMarca"),
+    MODEL(2, "updModelo|ddlModelo", "ddlModelo"),
+    YEAR_PRICE(3, "updAnoValor|ddlAnoValor", "ddlAnoValor");
+    private final Integer order;
     private final String scriptManager;
     private final String eventTarget;
 
-    Event(String aScriptManager, String aEventTarget) {
+    Event(Integer aOrder, String aScriptManager, String aEventTarget) {
+      order = aOrder;
       scriptManager = aScriptManager;
       eventTarget = aEventTarget;
+    }
+
+    public Integer getOrder() {
+      return order;
     }
 
     public String getScriptManager() {
@@ -114,7 +118,31 @@ public class Interaction {
       } catch (IOException ex) {
         // Tenta novamente
         this.loadPage(event);
+      } catch(Exception ex) {
+        this.reopenPage(event);
       }
+    }
+  }
+
+  private void reopenPage(Event event) {
+    Integer currentReferenceId = this.referenceId;
+    Integer currentBrandId = this.brandId;
+    String currentModelId = this.modelId;
+    Integer currentYearPriceId = this.yearPriceId;
+    
+    this.setClassification(classification);
+    this.setReferenceId(currentReferenceId);
+
+    if (event.getOrder() >= 1) {
+      this.setBrandId(currentBrandId);
+    }
+    
+    if (event.getOrder() >= 2) {
+      this.setModelId(currentModelId);
+    }
+    
+    if (event.getOrder() >= 3) {
+      this.setYearPriceId(currentYearPriceId);
     }
   }
 
@@ -152,17 +180,17 @@ public class Interaction {
 
     return result;
   }
-  
+
   public Document getPageSource() {
     return this.pageSource;
   }
-  
+
   public void setClassification(VehicleClassification classification) {
     this.classification = classification;
     this.clearValues();
     this.openPage();
   }
-  
+
   public void setReferenceId(Integer referenceId) {
     this.referenceId = referenceId;
     this.loadPage(Event.REFERENCE);
