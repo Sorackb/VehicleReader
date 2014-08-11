@@ -59,6 +59,8 @@ public class Reader extends Thread implements Communicable {
         }
         printWriter = new PrintWriter(fileWriter);
         ex.printStackTrace(printWriter);
+        printWriter.close();
+        fileWriter.close();
       } catch (IOException ex1) {
         //Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex1);
       }
