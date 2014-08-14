@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.lucassouza.vehiclereader.model.businessrule.ReferenceBR;
 import org.lucassouza.vehiclereader.model.businessrule.YearPriceBR;
 import org.lucassouza.vehiclereader.pojo.YearPrice;
@@ -45,8 +47,9 @@ public class Reader extends Thread implements Communicable {
 
     try {
       this.evaluate();
-    // Grava o erro em um arquivo de log (error_log.txt)
+      // Grava o erro em um arquivo de log (error_log.txt)
     } catch (Exception ex) {
+      Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
       try {
         systemPath = Configuration.class.getProtectionDomain().getCodeSource()
                 .getLocation().getPath();

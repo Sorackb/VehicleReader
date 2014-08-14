@@ -2,9 +2,10 @@ package org.lucassouza.vehiclereader.model.businessrule;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.nodes.Element;
@@ -28,6 +29,7 @@ public class ReferenceBR extends BasicBR {
   private VehicleClassification lastClassification;
   private Boolean proceedClassification;
   private Boolean proceedReference;
+  private List<Reference> readingList;
 
   public ReferenceBR() {
     this.resourceType = ResourceType.REFERENCE;
@@ -35,11 +37,15 @@ public class ReferenceBR extends BasicBR {
     this.proceedClassification = true;
   }
 
-  public LinkedHashSet<Reference> readAll() {
+  public ReferenceBR(List<Reference> readingList) {
+    this();
+    this.readingList = readingList;
+  }
+
+  public List<Reference> updateReferences() {
     Interaction interaction = new Interaction();
     ReferencePT referencePT = new ReferencePT();
-    LinkedHashSet<Reference> result;
-    LinkedHashSet<Reference> completedList;
+    List<Reference> result;
     Elements referenceList;
 
     // Utiliza um tipo padrão para ler as referências
@@ -53,63 +59,71 @@ public class ReferenceBR extends BasicBR {
       referencePT.create(reference);
     }
 
-    completedList = referencePT.readCompleted();
-    result = referencePT.readPending();
+    result = referencePT.readAll("id", false);
 
-    this.informAmount(result.size() + completedList.size());
+    return result;
+  }
 
-    for (int i = 0; i < completedList.size(); i++) {
-      this.informIncrement();
+  public void readAll() {
+    ReferencePT referencePT = new ReferencePT();
+
+    if (this.readingList == null) {
+      this.readingList = this.updateReferences();
     }
+
+    this.informAmount(this.readingList.size());
 
     /* Separei a continuidade para implementar o sistema de flag de finalização,
      * impedindo que leituras que já foram executadas ocupem processamento.
      */
-    for (Reference reference : result) {
+    for (Reference reference : this.readingList) {
+      // Caso já esteja completo apenas segue em frente
+      if (ReferenceSituation.COMPLETE.equals(reference.getReferenceSituation())) {
+        this.informIncrement();
+        continue;
+      }
+
       if (!this.proceedReference && this.lastReference.equals(reference)) {
         this.proceedReference = true;
       }
-      if (this.proceedReference) {
 
-        reference.setReferenceSituation(ReferenceSituation.INCOMPLETE);
-        referencePT.update(reference);
-
-        if (this.observerList != null) {
-          for (Communicable observer : this.observerList) {
-            observer.informAmount(ResourceType.VEHICLE_CLASSIFICATION, VehicleClassification.values().length - 1);
-          }
-        }
-
-        for (VehicleClassification classification : VehicleClassification.values()) {
-          // Desconsidera o tipo de veículo "NENHUM"
-          if (!classification.getId().equals(0)) {
-            if (!this.proceedClassification && this.lastClassification.equals(classification)) {
-              this.proceedClassification = true;
-            }
-
-            if (this.proceedClassification) {
-              interaction = new Interaction();
-
-              interaction.setClassification(classification);
-              this.continueReading(interaction, reference, classification);
-            }
-
-            if (this.observerList != null) {
-              for (Communicable observer : this.observerList) {
-                observer.informIncrement(ResourceType.VEHICLE_CLASSIFICATION);
-              }
-            }
-          }
-        }
-
-        reference.setReferenceSituation(ReferenceSituation.COMPLETE);
-        referencePT.update(reference);
+      // Caso não deva continuar, vai para o próximo registro
+      if (!this.proceedReference) {
+        this.informIncrement();
+        continue;
       }
+
+      reference.setReferenceSituation(ReferenceSituation.INCOMPLETE);
+      referencePT.update(reference);
+
+      // Desconsidera o tipo de veículo "NENHUM"
+      this.informAmount(ResourceType.VEHICLE_CLASSIFICATION, VehicleClassification.values().length - 1);
+
+      for (VehicleClassification classification : VehicleClassification.values()) {
+        // Desconsidera o tipo de veículo "NENHUM"
+        if (classification.getId().equals(0)) {
+          continue;
+        }
+
+        if (!this.proceedClassification && this.lastClassification.equals(classification)) {
+          this.proceedClassification = true;
+        }
+
+        if (this.proceedClassification) {
+          Interaction interaction = new Interaction();
+
+          interaction.setClassification(classification);
+          this.continueReading(interaction, reference, classification);
+        }
+
+        this.informIncrement(ResourceType.VEHICLE_CLASSIFICATION);
+      }
+
+      reference.setReferenceSituation(ReferenceSituation.COMPLETE);
+      referencePT.update(reference);
 
       this.informIncrement();
     }
-
-    return result;
   }
 
   private void continueReading(Interaction interaction, Reference reference,
@@ -165,6 +179,24 @@ public class ReferenceBR extends BasicBR {
     }
 
     return result;
+  }
+
+  private void informAmount(ResourceType resourceType, Integer amount) {
+    // Slightly modified in relation to inherited method
+    if (this.observerList != null) {
+      for (Communicable observer : this.observerList) {
+        observer.informAmount(resourceType, amount);
+      }
+    }
+  }
+
+  private void informIncrement(ResourceType resourceType) {
+    // Slightly modified in relation to inherited method
+    if (this.observerList != null) {
+      for (Communicable observer : this.observerList) {
+        observer.informIncrement(resourceType);
+      }
+    }
   }
 
   @Override

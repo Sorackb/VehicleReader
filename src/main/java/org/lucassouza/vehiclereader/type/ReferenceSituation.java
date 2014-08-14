@@ -18,6 +18,16 @@ public enum ReferenceSituation {
     idDB = aIdDB;
   }
 
+  public static ReferenceSituation valueOf(Integer aIdDB) {
+    for(ReferenceSituation referenceSituation: ReferenceSituation.values()) {
+      if (referenceSituation.getIdDB().equals(aIdDB)) {
+        return referenceSituation;
+      }
+    }
+
+    return null;
+  }
+
   public Integer getIdDB() {
     return idDB;
   }
