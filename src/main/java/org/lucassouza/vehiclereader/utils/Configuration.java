@@ -51,6 +51,7 @@ public class Configuration {
 
       lerArquivo();
 
+      // Supported DBMS: SQLServer and MariaDB
       switch (iniFile.getProperty("connection.dbms")) {
         case "MariaDB":
           bdConfig.put("javax.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
