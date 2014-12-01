@@ -91,12 +91,12 @@ public class Interaction {
   }
 
   private void loadPage(Event event) {
-    Connection conexaoPagina;
-    Response respostaPagina;
+    Connection pageConnection;
+    Response pageResponse;
 
     if (this.classification != null) {
       try {
-        conexaoPagina = Jsoup.connect(this.url)
+        pageConnection = Jsoup.connect(this.url)
                 .data("ScriptManager1", event.getScriptManager())
                 .data("__EVENTTARGET", event.getEventTarget())
                 .data("__VIEWSTATE", this.viewState)
@@ -110,15 +110,15 @@ public class Interaction {
                         + "AppleWebKit/537.36 (KHTML, like Gecko) "
                         + "Chrome/32.0.1700.76 "
                         + "Safari/537.36");
-        respostaPagina = conexaoPagina.method(Connection.Method.POST).execute();
-        this.pageSource = respostaPagina.parse();
+        pageResponse = pageConnection.method(Connection.Method.POST).execute();
+        this.pageSource = pageResponse.parse();
         // Atualiza as variáveis de sessão
         this.viewState = this.getVariable("__VIEWSTATE");
         this.eventValidation = this.getVariable("__EVENTVALIDATION");
       } catch (IOException ex) {
         // Tenta novamente
         this.loadPage(event);
-      } catch(Exception ex) {
+      } catch (Exception ex) {
         this.reopenPage(event);
       }
     }
@@ -129,18 +129,18 @@ public class Interaction {
     Integer currentBrandId = this.brandId;
     String currentModelId = this.modelId;
     Integer currentYearPriceId = this.yearPriceId;
-    
+
     this.setClassification(classification);
     this.setReferenceId(currentReferenceId);
 
     if (event.getOrder() >= 1) {
       this.setBrandId(currentBrandId);
     }
-    
+
     if (event.getOrder() >= 2) {
       this.setModelId(currentModelId);
     }
-    
+
     if (event.getOrder() >= 3) {
       this.setYearPriceId(currentYearPriceId);
     }

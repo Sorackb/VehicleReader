@@ -14,6 +14,7 @@ import org.lucassouza.tools.PropertyTool;
 public class Configuration {
 
   private static PropertyTool iniFile;
+  // Global para não ser verificado a cada momento
   private static HashMap<String, String> bdConfig;
 
   public static void lerArquivo() {
@@ -37,7 +38,7 @@ public class Configuration {
       }
     }
   }
-  
+
   public static String getPUName() {
     return "VehicleReaderPU";
   }
@@ -49,8 +50,18 @@ public class Configuration {
       bdConfig = new HashMap<>();
 
       lerArquivo();
-      dataBaseLocation = "jdbc:sqlserver://" + iniFile.getProperty("connection.host") + ";"
-              + "databaseName=" + iniFile.getProperty("connection.database");
+
+      switch (iniFile.getProperty("connection.dbms")) {
+        case "MariaDB":
+          bdConfig.put("javax.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
+          dataBaseLocation = "jdbc:mariadb://" + iniFile.getProperty("connection.host") + "/";
+          break;
+        default:
+          bdConfig.put("javax.persistence.jdbc.driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+          dataBaseLocation = "jdbc:sqlserver://" + iniFile.getProperty("connection.host") + ";databaseName=";
+      }
+
+      dataBaseLocation = dataBaseLocation + iniFile.getProperty("connection.database");
       bdConfig.put("javax.persistence.jdbc.url", dataBaseLocation);
       bdConfig.put("javax.persistence.jdbc.user", iniFile.getProperty("connection.user"));
       bdConfig.put("javax.persistence.jdbc.password", iniFile.getProperty("connection.password"));
