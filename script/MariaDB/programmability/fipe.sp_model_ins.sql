@@ -9,7 +9,6 @@ begin
   if not exists(select m.id
                   from fipe.tb_model m
                  where m.id = pid) then
-  begin
     insert fipe.tb_model(id,
                          id_brand,
                          id_vehicle_classification,
