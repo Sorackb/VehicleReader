@@ -313,16 +313,22 @@ public class FrmReader extends JFrame implements Communicable {
   public void informAmount(ResourceType resourceType, Integer amount) {
     JProgressBar pgbRefresh = null;
 
-    if (resourceType.equals(ResourceType.REFERENCE)) {
-      pgbRefresh = this.pgbReference;
-    } else if (resourceType.equals(ResourceType.VEHICLE_CLASSIFICATION)) {
-      pgbRefresh = this.pgbVehicleClassification;
-    } else if (resourceType.equals(ResourceType.BRAND)) {
-      pgbRefresh = this.pgbBrand;
-    } else if (resourceType.equals(ResourceType.MODEL)) {
-      pgbRefresh = this.pgbModel;
-    } else if (resourceType.equals(ResourceType.YEAR_PRICE)) {
-      pgbRefresh = this.pgbYearPrice;
+    switch (resourceType) {
+      case REFERENCE:
+        pgbRefresh = this.pgbReference;
+        break;
+      case VEHICLE_CLASSIFICATION:
+        pgbRefresh = this.pgbVehicleClassification;
+        break;
+      case BRAND:
+        pgbRefresh = this.pgbBrand;
+        break;
+      case MODEL:
+        pgbRefresh = this.pgbModel;
+        break;
+      case YEAR_PRICE:
+        pgbRefresh = this.pgbYearPrice;
+        break;
     }
 
     if (pgbRefresh != null) {
@@ -334,17 +340,29 @@ public class FrmReader extends JFrame implements Communicable {
 
   @Override
   public void informIncrement(ResourceType resourceType) {
-    if (resourceType.equals(ResourceType.REFERENCE)) {
-      this.pgbReference.setValue(this.pgbReference.getValue() + 1);
-    } else if (resourceType.equals(ResourceType.VEHICLE_CLASSIFICATION)) {
-      this.pgbVehicleClassification.setValue(this.pgbVehicleClassification.getValue() + 1);
-    } else if (resourceType.equals(ResourceType.BRAND)) {
-      this.pgbBrand.setValue(this.pgbBrand.getValue() + 1);
-    } else if (resourceType.equals(ResourceType.MODEL)) {
-      this.pgbModel.setValue(this.pgbModel.getValue() + 1);
-    } else if (resourceType.equals(ResourceType.YEAR_PRICE)) {
-      yearPriceByMinute++;
-      this.pgbYearPrice.setValue(this.pgbYearPrice.getValue() + 1);
+    JProgressBar pgbRefresh = null;
+
+    switch (resourceType) {
+      case REFERENCE:
+        pgbRefresh = this.pgbReference;
+        break;
+      case VEHICLE_CLASSIFICATION:
+        pgbRefresh = this.pgbVehicleClassification;
+        break;
+      case BRAND:
+        pgbRefresh = this.pgbBrand;
+        break;
+      case MODEL:
+        pgbRefresh = this.pgbModel;
+        break;
+      case YEAR_PRICE:
+        this.yearPriceByMinute++;
+        pgbRefresh = this.pgbYearPrice;
+        break;
+    }
+    
+    if (pgbRefresh != null) {
+      pgbRefresh.setValue(pgbRefresh.getValue() + 1);
     }
   }
 }
