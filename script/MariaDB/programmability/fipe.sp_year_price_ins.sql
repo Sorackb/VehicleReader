@@ -19,7 +19,7 @@ begin
   -- Avoids duplicate
   if not exists(select yp.id
                   from fipe.tb_year_price yp
-                 where yp.id = @pid
+                 where yp.id = pid
                    and yp.id_model = pid_model) then
     insert into fipe.tb_year_price(id,
                                   id_model,
