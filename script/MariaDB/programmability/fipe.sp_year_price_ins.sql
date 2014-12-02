@@ -20,18 +20,18 @@ begin
   if not exists(select yp.id
                   from fipe.tb_year_price yp
                  where yp.id = @pid
-                   and yp.id_model = @pid_model) then
+                   and yp.id_model = pid_model) then
     insert into fipe.tb_year_price(id,
                                   id_model,
                                   id_reference,
                                   id_fuel_type,
                                   year,
                                   price)
-                           values(@pid,
-                                  @pid_model,
-                                  @pid_reference,
-                                  @pid_fuel_type,
-                                  @pyear,
-                                  @pprice);
+                           values(pid,
+                                  pid_model,
+                                  pid_reference,
+                                  pid_fuel_type,
+                                  pyear,
+                                  pprice);
   end if;
 end;
