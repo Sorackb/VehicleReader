@@ -1,5 +1,5 @@
 drop procedure if exists fipe.sp_year_price_ins;
-create procedure procedure fipe.sp_year_price_ins(
+create procedure fipe.sp_year_price_ins(
   out pid                  int,
       pid_model            varchar(8),
       pid_reference        int,
