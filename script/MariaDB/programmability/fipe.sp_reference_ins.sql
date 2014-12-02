@@ -1,9 +1,9 @@
 drop procedure if exists fipe.sp_reference_ins;
 create procedure fipe.sp_reference_ins(
-  out pid          int,
-      pdescription varchar(15),
-      pmonth       int,
-      pyear        int)
+  inout pid          int,
+        pdescription varchar(15),
+        pmonth       int,
+        pyear        int)
 begin
   declare vid_reference_situation int;
 

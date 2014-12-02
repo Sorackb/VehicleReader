@@ -1,7 +1,7 @@
 drop procedure if exists fipe.sp_brand_ins;
 create procedure fipe.sp_brand_ins(
-  out pid          int,
-      pdescription varchar(30))
+  inout pid          int,
+        pdescription varchar(30))
 begin
   -- Search for the next code if the parameter is null
   if isnull(pid) then
