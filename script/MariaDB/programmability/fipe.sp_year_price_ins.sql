@@ -1,12 +1,11 @@
 drop procedure if exists fipe.sp_year_price_ins;
-create procedure procedure fipe.sp_year_price_ins
+create procedure procedure fipe.sp_year_price_ins(
   out pid                  int,
       pid_model            varchar(8),
       pid_reference        int,
       pid_fuel_type        int,
       pyear                int,
-      pprice               decimal(15, 2)
-as
+      pprice               decimal(15, 2))
 begin
   -- Search for the next code if the parameter is null
   if isnull(pid) then
