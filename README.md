@@ -13,8 +13,11 @@ VehicleReader/
 
 ### config.ini structure
 
-- connection.dbms `MariaDB` or `SQLServer` (optional)
-- connection.host
+- connection.dbms (optional)
+  - `(default) SQLServer`
+  - `MariaDB`
+- connection.host (optional)
+  - `(default) 127.0.0.1`
 - connection.database
 - connection.user
 - connection.password
