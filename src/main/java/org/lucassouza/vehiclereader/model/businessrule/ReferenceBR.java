@@ -131,7 +131,7 @@ public class ReferenceBR extends BasicBR {
     BrandBR brandBR = new BrandBR();
 
     if (interaction.getElementAttr("select#ddlTabelaReferencia > option[value="
-            + reference.getId() + "]", "selected").equals("")) {
+            + reference.getId() + "]", "selected").isEmpty()) {
       interaction.setReferenceId(reference.getId());
     }
 

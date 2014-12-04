@@ -17,17 +17,23 @@ public enum FuelType {
   public static FuelType getFuelType(String fuelTypeDescription) {
     FuelType result;
 
-    if (fuelTypeDescription == null || fuelTypeDescription.trim().equals("")) {
+    if (fuelTypeDescription == null || fuelTypeDescription.trim().isEmpty()) {
       result = UNIDENTIFIED;
-    } else if (fuelTypeDescription.toUpperCase().equals("GASOLINA")) {
-      result = GASOLINE;
-    } else if (fuelTypeDescription.toUpperCase().equals("ÁLCOOL")
-            || fuelTypeDescription.toUpperCase().equals("ALCOOL")) {
-      result = ALCOHOL;
-    } else if (fuelTypeDescription.toUpperCase().equals("DIESEL")) {
-      result = DIESEL;
     } else {
-      result = OTHER;
+      switch (fuelTypeDescription.trim().toUpperCase()) {
+        case "ÁLCOOL":
+        case "ALCOOL":
+          result = ALCOHOL;
+          break;
+        case "GASOLINA":
+          result = GASOLINE;
+          break;
+        case "DIESEL":
+          result = DIESEL;
+          break;
+        default:
+          result = OTHER;
+      }
     }
 
     return result;
