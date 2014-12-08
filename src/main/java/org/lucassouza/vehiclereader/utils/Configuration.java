@@ -17,7 +17,7 @@ public class Configuration {
   // Global para não ser verificado a cada momento
   private static HashMap<String, String> bdConfig;
 
-  public static void lerArquivo() {
+  public static void readFile() {
     String systemPath;
     File system;
 
@@ -49,7 +49,7 @@ public class Configuration {
     if (bdConfig == null) {
       bdConfig = new HashMap<>();
 
-      lerArquivo();
+      readFile();
 
       // Supported DBMS: SQLServer and MariaDB
       switch (iniFile.getProperty("connection.dbms", "SQLServer")) {
