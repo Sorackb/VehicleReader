@@ -11,7 +11,7 @@
   <url>http://maven.apache.org</url>
   <build>
     <plugins>
-      <!-- Plugin massa para gerar o .jar com as depend�ncias magicamente-->
+      <!-- Plugin massa para gerar o .jar com as dependências magicamente-->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
@@ -26,7 +26,7 @@
           <outputDirectory>C:\${project.name}</outputDirectory>
           <!--
            Podemos usar o ${project.file.parentFile.parentFile.name} ou
-           ${project.version} para pegar a vers�o da pasta
+           ${project.version} para pegar a versão da pasta
           -->
           <finalName>${project.name}</finalName>
           <appendAssemblyId>false</appendAssemblyId>
@@ -46,7 +46,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <version>3.2</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
