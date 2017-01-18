@@ -1,15 +1,15 @@
 package org.lucassouza.vehiclereader.model.businessrule;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.lucassouza.vehiclereader.controller.Communicable;
 import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.model.persistence.ReferencePT;
@@ -25,6 +25,7 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
  */
 public class ReferenceBR extends BasicBR {
 
+  private Interaction interaction;
   private Reference lastReference;
   private VehicleClassification lastClassification;
   private Boolean proceedClassification;
@@ -42,19 +43,18 @@ public class ReferenceBR extends BasicBR {
     this.readingList = readingList;
   }
 
-  public List<Reference> updateReferences() {
-    Interaction interaction = new Interaction();
+  public List<Reference> updateReferences() throws IOException {
     ReferencePT referencePT = new ReferencePT();
     List<Reference> result;
-    Elements referenceList;
+    JSONArray list;
 
+    this.interaction = new Interaction();
     // Utiliza um tipo padrão para ler as referências
-    interaction.setClassification(VehicleClassification.CAR);
-    referenceList = interaction.getPageSource().select(
-            "select#ddlTabelaReferencia > option");
+    this.interaction.setClassification(VehicleClassification.CAR);
+    list = new JSONArray(this.interaction.getLastResponse().body());
 
-    for (Element referenceElement : referenceList) {
-      Reference reference = this.convert(referenceElement);
+    for (Object object : list) {
+      Reference reference = this.convert((JSONObject) object);
       // Caso nenhum seja passado executa todas as referências
       referencePT.create(reference);
     }
@@ -64,7 +64,7 @@ public class ReferenceBR extends BasicBR {
     return result;
   }
 
-  public void readAll() {
+  public void readAll() throws IOException {
     ReferencePT referencePT = new ReferencePT();
 
     if (this.readingList == null) {
@@ -113,7 +113,7 @@ public class ReferenceBR extends BasicBR {
           Interaction interaction = new Interaction();
 
           interaction.setClassification(classification);
-          this.continueReading(interaction, reference, classification);
+          this.continueReading(reference, classification);
         }
 
         this.informIncrement(ResourceType.VEHICLE_CLASSIFICATION);
@@ -126,57 +126,39 @@ public class ReferenceBR extends BasicBR {
     }
   }
 
-  private void continueReading(Interaction interaction, Reference reference,
-          VehicleClassification classification) {
+  private void continueReading(Reference reference, VehicleClassification classification) throws IOException {
     BrandBR brandBR = new BrandBR();
 
-    if (interaction.getElementAttr("select#ddlTabelaReferencia > option[value="
-            + reference.getId() + "]", "selected").isEmpty()) {
-      interaction.setReferenceId(reference.getId());
-    }
-
+    this.interaction.setReferenceId(reference.getId());
     brandBR.setLast(this.lastYearPrice);
     this.lastYearPrice = null;
     brandBR.communicateInterest(this.observerList);
     brandBR.readAll(interaction, classification, reference);
   }
 
-  private Reference convert(Element reference) {
-    SimpleDateFormat formatterMonth = new SimpleDateFormat("MM");
-    SimpleDateFormat formatterYear = new SimpleDateFormat("yyyy");
+  private Reference convert(JSONObject reference) {
     SimpleDateFormat formatterMonthExt = new SimpleDateFormat("MMM");
     SimpleDateFormat formatterExt = new SimpleDateFormat("MMM/yyyy");
     SimpleDateFormat formatterExtInv = new SimpleDateFormat("yyyy/MMM");
     Calendar calendar = Calendar.getInstance();
-    String description = reference.text().replace(" ", "");
+    String description = reference.getString("Mes");
     Reference result = new Reference();
     String[] textPart;
     Date today;
-    Integer month;
-    Integer year;
 
-    result.setId(Integer.parseInt(reference.attr("value")));
+    result.setId(reference.getInt("Codigo"));
+    textPart = description.split("/");
 
-    if (description.toUpperCase().equals("ATUAL")) {
-      month = Integer.parseInt(formatterMonth.format(new Date()));
-      year = Integer.parseInt(formatterYear.format(new Date()));
-      today = new Date();
+    try {
+      today = formatterExtInv.parse(description);
       result.setDescription(formatterExt.format(today));
-      result.setMonth(month);
-      result.setYear(year);
-    } else {
-      textPart = description.split("/");
-
-      try {
-        today = formatterExtInv.parse(description);
-        result.setDescription(formatterExt.format(today));
-        calendar.setTime(formatterMonthExt.parse(textPart[1]));
-        result.setMonth(calendar.get(Calendar.MONTH) + 1);
-      } catch (ParseException ex) {
-        Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-      }
-      result.setYear(Integer.parseInt(textPart[0].trim()));
+      calendar.setTime(formatterMonthExt.parse(textPart[1]));
+      result.setMonth(calendar.get(Calendar.MONTH) + 1);
+    } catch (ParseException ex) {
+      Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
     }
+
+    result.setYear(Integer.parseInt(textPart[0].trim()));
 
     return result;
   }

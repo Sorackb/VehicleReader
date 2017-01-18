@@ -70,7 +70,7 @@
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
-      <version>1.10.1</version>
+      <version>1.10.2</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.persistence</groupId>
@@ -85,6 +85,11 @@
     <dependency>
       <groupId>org.lucassouza</groupId>
       <artifactId>DataAccessObject</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.lucassouza</groupId>
+      <artifactId>Navigation</artifactId>
       <version>1.0</version>
     </dependency>
     <dependency>
@@ -107,6 +112,11 @@
       <groupId>org.jfree</groupId>
       <artifactId>jfreechart</artifactId>
       <version>1.0.19</version>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20160810</version>
     </dependency>
     <dependency>
       <groupId>org.netbeans.external</groupId>

@@ -1,9 +1,9 @@
 package org.lucassouza.vehiclereader.model.businessrule;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.json.JSONObject;
 import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.model.persistence.ModelPT;
 import org.lucassouza.vehiclereader.pojo.Brand;
@@ -29,21 +29,20 @@ public class ModelBR extends BasicBR {
   }
 
   public List<Model> readAll(Interaction interaction, VehicleClassification classification,
-          Reference reference,
-          Brand brand) {
-    Elements modelList = interaction.getPageSource().select(
-            "select#ddlModelo > option:not(:nth-of-type(1))");
+          Reference reference, Brand brand) throws IOException {
     List<Model> result = new ArrayList<>();
     YearPriceBR yearPriceBR = new YearPriceBR();
+    JSONObject models;
 
-    this.informAmount(modelList.size());
-    
+    models = new JSONObject(interaction.getLastResponse().body());
+    this.informAmount(models.getJSONArray("Modelos").length());
+
     yearPriceBR.setLast(this.lastYearPrice);
     this.lastYearPrice = null;
     yearPriceBR.communicateInterest(this.observerList);
 
-    for (Element modelElement : modelList) {
-      Model model = this.convert(classification, brand, modelElement);
+    for (Object object : models.getJSONArray("Modelos")) {
+      Model model = this.convert(classification, brand, (JSONObject) object);
 
       if (!this.proceed && this.lastModel.equals(model)) {
         this.proceed = true;
@@ -62,7 +61,8 @@ public class ModelBR extends BasicBR {
 
     for (Model model : result) {
       interaction.setModelId(model.getId());
-      yearPriceBR.readAll(interaction, reference, model);
+      // TODO Send interaction
+      yearPriceBR.readAll(null, reference, model);
       this.informIncrement();
     }
 
@@ -70,15 +70,16 @@ public class ModelBR extends BasicBR {
   }
 
   private Model convert(VehicleClassification classification, Brand brand,
-          Element model) {
-    String fipe = model.attr("value");
+          JSONObject model) {
     String description;
     Model result;
+    int id;
 
-    description = model.text();
+    id = model.getInt("Value");
+    description = model.getString("Label");
     result = new Model();
 
-    result.setId(fipe);
+    result.setId(id);
     result.setDescription(description);
     result.setBrand(brand);
     result.setVehicleClassification(classification);

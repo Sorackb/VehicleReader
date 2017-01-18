@@ -1,9 +1,10 @@
 package org.lucassouza.vehiclereader.model.businessrule;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.model.persistence.BrandPT;
 import org.lucassouza.vehiclereader.pojo.Brand;
@@ -26,21 +27,21 @@ public class BrandBR extends BasicBR {
   }
 
   public List<Brand> readAll(Interaction interaction, VehicleClassification classification,
-          Reference reference) {
-    Elements brandList = interaction.getPageSource().select(
-            "select#ddlMarca > option:not(:nth-of-type(1))");
+          Reference reference) throws IOException {
     List<Brand> result = new ArrayList<>();
     BrandPT brandPT = new BrandPT();
     ModelBR modelBR = new ModelBR();
+    JSONArray list;
 
-    this.informAmount(brandList.size());
-    
+    list = new JSONArray(interaction.getLastResponse().body());
+    this.informAmount(list.length());
+
     modelBR.setLast(this.lastYearPrice);
     this.lastYearPrice = null;
     modelBR.communicateInterest(this.observerList);
 
-    for (Element brandElement : brandList) {
-      Brand brand = this.convert(brandElement);
+    for (Object object : list) {
+      Brand brand = this.convert((JSONObject) object);
 
       if (!this.proceed && this.lastBrand.equals(brand)) {
         this.proceed = true;
@@ -64,12 +65,12 @@ public class BrandBR extends BasicBR {
     return result;
   }
 
-  private Brand convert(Element brand) {
-    Integer id = Integer.parseInt(brand.attr("value"));
+  private Brand convert(JSONObject brand) {
+    Integer id = Integer.parseInt(brand.getString("Value"));
     String description;
     Brand result;
 
-    description = brand.text();
+    description = brand.getString("Label");
     result = new Brand();
 
     result.setId(id);

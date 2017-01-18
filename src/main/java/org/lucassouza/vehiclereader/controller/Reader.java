@@ -24,7 +24,7 @@ public class Reader extends Thread implements Communicable {
     this.observer = observer;
   }
 
-  private void evaluate() {
+  private void evaluate() throws IOException {
     YearPriceBR yearPriceBR;
     ReferenceBR referenceBR;
     YearPrice lastYearPrice;

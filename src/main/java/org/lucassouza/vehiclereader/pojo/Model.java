@@ -23,7 +23,7 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
 public class Model implements Serializable {
 
   @Id
-  private String id;
+  private int id;
   private String description;
   @ManyToOne
   @JoinColumn(name = "id_brand")
@@ -33,11 +33,11 @@ public class Model implements Serializable {
   private VehicleClassification vehicleClassification;
   private static final long serialVersionUID = 1;
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -66,6 +66,6 @@ public class Model implements Serializable {
   }
 
   public Boolean equals(Model model) {
-    return model != null && model.getId().equals(this.getId());
+    return model != null && model.getId() == this.getId();
   }
 }

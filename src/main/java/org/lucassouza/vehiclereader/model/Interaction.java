@@ -1,222 +1,92 @@
 package org.lucassouza.vehiclereader.model;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import org.jsoup.Connection;
-import org.jsoup.Connection.Response;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.lucassouza.navigation.model.Content;
+import org.lucassouza.navigation.model.Navigation;
 import org.lucassouza.vehiclereader.type.VehicleClassification;
 
 /**
  *
- * @author Lucas Souza [sorackb@gmail.com]
+ * @author lucas.souza
  */
-public class Interaction {
+public class Interaction extends Navigation {
 
-  private VehicleClassification classification;
-  private Document pageSource;
-  private String url;
-  private Integer referenceId;
-  private Integer brandId;
-  private String modelId;
-  private Integer yearPriceId;
-  private String eventValidation;
-  private String viewState;
+  private final LinkedHashMap<String, String> headers;
+  private final String domain;
 
-  private enum Event {
-
-    REFERENCE(0, "ScriptManager1|ddlTabelaReferencia", "ddlTabelaReferencia"),
-    BRAND(1, "UdtMarca|ddlMarca", "ddlMarca"),
-    MODEL(2, "updModelo|ddlModelo", "ddlModelo"),
-    YEAR_PRICE(3, "updAnoValor|ddlAnoValor", "ddlAnoValor");
-    private final Integer order;
-    private final String scriptManager;
-    private final String eventTarget;
-
-    Event(Integer aOrder, String aScriptManager, String aEventTarget) {
-      order = aOrder;
-      scriptManager = aScriptManager;
-      eventTarget = aEventTarget;
-    }
-
-    public Integer getOrder() {
-      return order;
-    }
-
-    public String getScriptManager() {
-      return scriptManager;
-    }
-
-    public String getEventTarget() {
-      return eventTarget;
-    }
+  public Interaction() {
+    super();
+    this.headers = new LinkedHashMap<>();
+    this.domain = "http://veiculos.fipe.org.br/";
+    this.defaults = Content.initializer()
+            .domain(this.domain + "api/veiculos/");
+    this.headers.put("Referer", this.domain);
+    this.headers.put("Content-Type", "application/x-www-form-urlencoded");
   }
 
-  private void clearValues() {
-    this.referenceId = 0;
-    this.brandId = 0;
-    this.modelId = "0";
-    this.yearPriceId = 0;
-    this.openPage();
+  public void setClassification(VehicleClassification classification) throws IOException {
+    Content references;
+
+    this.fields.put("codigoTipoVeiculo", String.valueOf(classification.getIdDB()));
+    references = this.defaults.initialize()
+            .method(Connection.Method.POST)
+            .complement("/ConsultarTabelaDeReferencia")
+            .headers(this.headers)
+            .build();
+
+    this.request(references);
   }
 
-  private void openPage() {
-    Connection pageConnection;
-    Response pageResponse;
+  public void setReferenceId(int id) throws IOException {
+    Content brands;
 
-    if (this.classification != null) {
-      try {
-        this.url = "http://www.fipe.org.br/web/indices/veiculos/default.aspx?v="
-                + this.classification.getComplement() + "&p=" + this.classification.getId();
+    this.fields.put("codigoTabelaReferencia", String.valueOf(id));
 
-        pageConnection = Jsoup.connect(this.url)
-                .userAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) "
-                        + "AppleWebKit/537.36 (KHTML, like Gecko) "
-                        + "Chrome/32.0.1700.76 "
-                        + "Safari/537.36");
-        pageResponse = pageConnection.method(Connection.Method.GET).execute();
-        this.pageSource = pageResponse.parse();
-        // Na primeira vez as tags de validação aparecem dentro de um componente "hidden"
-        this.viewState = this.getElementAttr("#__VIEWSTATE", "value");
-        this.eventValidation = this.getElementAttr("#__EVENTVALIDATION", "value");
-        // Necessário já que para a primeira referência o post não deve ser acionado
-        this.referenceId = Integer.parseInt(this.getElementAttr(
-                "select#ddlTabelaReferencia > option[selected=selected]", "value"));
-      } catch (IOException ex) {
-        // Tenta novamente
-        this.openPage();
-      }
-    }
+    brands = this.defaults.initialize()
+            .method(Connection.Method.POST)
+            .complement("/ConsultarMarcas")
+            .fields("codigoTipoVeiculo",
+                    "codigoTabelaReferencia")
+            .headers(this.headers)
+            .build();
+
+    this.request(brands);
   }
 
-  private void loadPage(Event event) {
-    Connection pageConnection;
-    Response pageResponse;
+  public void setBrandId(int id) throws IOException {
+    Content models;
 
-    if (this.classification != null) {
-      try {
-        pageConnection = Jsoup.connect(this.url)
-                .data("ScriptManager1", event.getScriptManager())
-                .data("__EVENTTARGET", event.getEventTarget())
-                .data("__VIEWSTATE", this.viewState)
-                .data("__EVENTVALIDATION", this.eventValidation)
-                .data("ddlTabelaReferencia", this.referenceId.toString())
-                .data("ddlMarca", this.brandId.toString())
-                .data("ddlModelo", this.modelId)
-                .data("ddlAnoValor", this.yearPriceId.toString())
-                .data("__ASYNCPOST", "true")
-                .userAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) "
-                        + "AppleWebKit/537.36 (KHTML, like Gecko) "
-                        + "Chrome/32.0.1700.76 "
-                        + "Safari/537.36");
-        pageResponse = pageConnection.method(Connection.Method.POST).execute();
-        this.pageSource = pageResponse.parse();
-        // Atualiza as variáveis de sessão
-        this.viewState = this.getVariable("__VIEWSTATE");
-        this.eventValidation = this.getVariable("__EVENTVALIDATION");
-      } catch (IOException ex) {
-        // Tenta novamente
-        this.loadPage(event);
-      } catch (Exception ex) {
-        this.reopenPage(event);
-      }
-    }
+    this.fields.put("codigoMarca", String.valueOf(id));
+
+    models = this.defaults.initialize()
+            .method(Connection.Method.POST)
+            .complement("/ConsultarModelos")
+            .fields("codigoTipoVeiculo",
+                    "codigoTabelaReferencia",
+                    "codigoMarca")
+            .headers(this.headers)
+            .build();
+
+    this.request(models);
   }
 
-  private void reopenPage(Event event) {
-    Integer currentReferenceId = this.referenceId;
-    Integer currentBrandId = this.brandId;
-    String currentModelId = this.modelId;
-    Integer currentYearPriceId = this.yearPriceId;
+  public void setModelId(int id) throws IOException {
+    Content years;
 
-    this.setClassification(classification);
-    this.setReferenceId(currentReferenceId);
+    this.fields.put("codigoModelo", String.valueOf(id));
 
-    if (event.getOrder() >= 1) {
-      this.setBrandId(currentBrandId);
-    }
+    years = this.defaults.initialize()
+            .method(Connection.Method.POST)
+            .complement("/ConsultarModelos")
+            .fields("codigoTipoVeiculo",
+                    "codigoTabelaReferencia",
+                    "codigoMarca",
+                    "codigoModelo")
+            .headers(this.headers)
+            .build();
 
-    if (event.getOrder() >= 2) {
-      this.setModelId(currentModelId);
-    }
-
-    if (event.getOrder() >= 3) {
-      this.setYearPriceId(currentYearPriceId);
-    }
-  }
-
-  public String getElementAttr(String cssSelector, String attr) {
-    Element element = this.pageSource.select(cssSelector).first();
-    String result = new String();
-
-    if (element != null) {
-      result = element.attr(attr);
-    }
-
-    return result;
-  }
-
-  /**
-   * Busca uma variável, delimitada por um formato específico (|VARIAVEL|VALOR|)
-   * no de retorno HTML
-   *
-   * @param variable identificador da variável a ser procurada
-   * @return valor definido no HTML
-   */
-  public String getVariable(String variable) {
-    String result = new String();
-    String htmlText = this.pageSource.text();
-    Integer startPosition;
-    Integer endPosition;
-
-    variable = "|" + variable + "|";
-    startPosition = htmlText.indexOf(variable) + variable.length();
-
-    if (startPosition > 0) {
-      endPosition = htmlText.indexOf("|", startPosition);
-      result = htmlText.substring(startPosition, endPosition);
-    }
-
-    return result;
-  }
-
-  public Document getPageSource() {
-    return this.pageSource;
-  }
-
-  public void setClassification(VehicleClassification classification) {
-    this.classification = classification;
-    this.clearValues();
-    this.openPage();
-  }
-
-  public void setReferenceId(Integer referenceId) {
-    this.referenceId = referenceId;
-    this.loadPage(Event.REFERENCE);
-    /* Necessário porque se não for zerado, o serviço da fipe instancia com valor
-     * nulo o objeto de retorno resultando em um erro
-     */
-    this.modelId = "0";
-    this.yearPriceId = 0;
-  }
-
-  public void setBrandId(Integer brandId) {
-    this.brandId = brandId;
-    this.loadPage(Event.BRAND);
-    /* Necessário porque se não for zerado, o serviço da fipe instancia com valor
-     * nulo o objeto de retorno resultando em um erro
-     */
-    this.yearPriceId = 0;
-  }
-
-  public void setModelId(String modelId) {
-    this.modelId = modelId;
-    this.loadPage(Event.MODEL);
-  }
-
-  public void setYearPriceId(Integer yearPriceId) {
-    this.yearPriceId = yearPriceId;
-    this.loadPage(Event.YEAR_PRICE);
+    this.request(years);
   }
 }

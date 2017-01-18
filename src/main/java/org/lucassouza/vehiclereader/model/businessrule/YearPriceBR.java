@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.lucassouza.vehiclereader.model.Interaction;
+import org.lucassouza.vehiclereader.model.Interaction2 ;
 import org.lucassouza.vehiclereader.model.persistence.YearPricePT;
 import org.lucassouza.vehiclereader.pojo.Model;
 import org.lucassouza.vehiclereader.pojo.Reference;
@@ -26,7 +26,7 @@ public class YearPriceBR extends BasicBR {
     this.proceed = true;
   }
 
-  public List<YearPrice> readAll(Interaction interaction, Reference reference,
+  public List<YearPrice> readAll(Interaction2  interaction, Reference reference,
           Model model) {
     Elements yearPriceList = interaction.getPageSource().select(
             "select#ddlAnoValor > option:not(:nth-of-type(1))");
@@ -61,7 +61,7 @@ public class YearPriceBR extends BasicBR {
     return result;
   }
 
-  private YearPrice convert(Interaction interaction, Reference reference,
+  private YearPrice convert(Interaction2  interaction, Reference reference,
           Model model) {
     Integer id = Integer.parseInt(interaction.getPageSource().select(
             "select#ddlAnoValor > option[selected=selected]").first().attr("value"));
