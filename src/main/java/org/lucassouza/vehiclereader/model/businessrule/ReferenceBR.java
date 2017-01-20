@@ -21,7 +21,6 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
  */
 public class ReferenceBR extends BasicBR {
 
-  private Interaction interaction;
   private Reference lastReference;
   private VehicleClassification lastClassification;
   private Boolean proceedClassification;
@@ -44,10 +43,9 @@ public class ReferenceBR extends BasicBR {
     List<Reference> result;
     JSONArray list;
 
-    this.interaction = new Interaction();
     // Utiliza um tipo padrão para ler as referências
-    this.interaction.setClassification(VehicleClassification.CAR);
-    list = new JSONArray(this.interaction.getLastResponse().body());
+    Interaction.getInstance().setClassification(VehicleClassification.CAR);
+    list = new JSONArray(Interaction.getInstance().getLastResponse().body());
 
     for (Object object : list) {
       Reference reference = this.convert((JSONObject) object);
@@ -106,9 +104,7 @@ public class ReferenceBR extends BasicBR {
         }
 
         if (this.proceedClassification) {
-          Interaction interaction = new Interaction();
-
-          interaction.setClassification(classification);
+          Interaction.getInstance().setClassification(classification);
           this.continueReading(reference, classification);
         }
 
@@ -125,11 +121,11 @@ public class ReferenceBR extends BasicBR {
   private void continueReading(Reference reference, VehicleClassification classification) throws IOException {
     BrandBR brandBR = new BrandBR();
 
-    this.interaction.setReferenceId(reference.getId());
+    Interaction.getInstance().setReferenceId(reference.getId());
     brandBR.setLast(this.lastYearPrice);
     this.lastYearPrice = null;
     brandBR.communicateInterest(this.observerList);
-    brandBR.readAll(interaction, classification, reference);
+    brandBR.readAll(classification, reference);
   }
 
   private Reference convert(JSONObject reference) {

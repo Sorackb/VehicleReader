@@ -26,14 +26,13 @@ public class BrandBR extends BasicBR {
     this.proceed = true;
   }
 
-  public List<Brand> readAll(Interaction interaction, VehicleClassification classification,
-          Reference reference) throws IOException {
+  public List<Brand> readAll(VehicleClassification classification, Reference reference) throws IOException {
     List<Brand> result = new ArrayList<>();
     BrandPT brandPT = new BrandPT();
     ModelBR modelBR = new ModelBR();
     JSONArray list;
 
-    list = new JSONArray(interaction.getLastResponse().body());
+    list = new JSONArray(Interaction.getInstance().getLastResponse().body());
     this.informAmount(list.length());
 
     modelBR.setLast(this.lastYearPrice);
@@ -57,8 +56,8 @@ public class BrandBR extends BasicBR {
     brandPT.create(result);
 
     for (Brand brand : result) {
-      interaction.setBrandId(brand.getId());
-      modelBR.readAll(interaction, classification, reference, brand);
+      Interaction.getInstance().setBrandId(brand.getId());
+      modelBR.readAll(classification, reference, brand);
       this.informIncrement();
     }
 

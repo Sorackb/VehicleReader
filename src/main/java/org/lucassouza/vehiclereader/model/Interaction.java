@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import org.jsoup.Connection;
 import org.lucassouza.navigation.model.Content;
 import org.lucassouza.navigation.model.Navigation;
-import org.lucassouza.vehiclereader.type.FuelType;
 import org.lucassouza.vehiclereader.type.VehicleClassification;
 
 /**
@@ -14,6 +13,7 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
  */
 public class Interaction extends Navigation {
 
+  private static Interaction instance;
   private final LinkedHashMap<String, String> headers;
   private final String domain;
 
@@ -27,10 +27,19 @@ public class Interaction extends Navigation {
     this.headers.put("Content-Type", "application/x-www-form-urlencoded");
   }
 
+  public static Interaction getInstance() {
+    if (instance == null) {
+      instance = new Interaction();
+    }
+
+    return instance;
+  }
+
   public void setClassification(VehicleClassification classification) throws IOException {
     Content references;
 
-    this.fields.put("codigoTipoVeiculo", String.valueOf(classification.getIdDB()));
+    this.fields.put("codigoTipoVeiculo", String.valueOf(classification.getId()));
+
     references = this.defaults.initialize()
             .method(Connection.Method.POST)
             .complement("/ConsultarTabelaDeReferencia")
@@ -98,9 +107,8 @@ public class Interaction extends Navigation {
 
     parts = id.split("-");
     this.fields.put("anoModelo", parts[0].trim());
-    this.fields.put("codigoTipoCombustivel", parts[1].trim());    
+    this.fields.put("codigoTipoCombustivel", parts[1].trim());
     this.fields.put("tipoConsulta", "tradicional");
-    //this.fields.put("tipoVeiculo", "carro");
 
     informations = this.defaults.initialize()
             .method(Connection.Method.POST)

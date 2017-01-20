@@ -28,13 +28,13 @@ public class ModelBR extends BasicBR {
     this.proceed = true;
   }
 
-  public List<Model> readAll(Interaction interaction, VehicleClassification classification,
+  public List<Model> readAll(VehicleClassification classification,
           Reference reference, Brand brand) throws IOException {
     List<Model> result = new ArrayList<>();
     YearPriceBR yearPriceBR = new YearPriceBR();
     JSONObject models;
 
-    models = new JSONObject(interaction.getLastResponse().body());
+    models = new JSONObject(Interaction.getInstance().getLastResponse().body());
     this.informAmount(models.getJSONArray("Modelos").length());
 
     yearPriceBR.setLast(this.lastYearPrice);
@@ -60,9 +60,8 @@ public class ModelBR extends BasicBR {
     modelPT.create(result);
 
     for (Model model : result) {
-      interaction.setModelId(model.getId());
-      // TODO Send interaction
-      yearPriceBR.readAll(interaction, reference, model);
+      Interaction.getInstance().setModelId(model.getId());
+      yearPriceBR.readAll(reference, model);
       this.informIncrement();
     }
 

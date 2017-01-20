@@ -15,6 +15,8 @@ alter procedure fipe.insert_year_price
   @pauthentication      varchar(11)
 as
 begin
+  set nocount on;
+
   -- Search for the next code if the parameter is null
   if @pid is null
   begin
@@ -25,8 +27,11 @@ begin
   -- Avoids duplicate
   if not exists(select yp.id
                   from fipe.year_price yp
-                 where yp.id = @pid
-                   and yp.id_model = @pid_model)
+                 where yp.id_model     = @pid_model
+                   and yp.id_reference = @pid_reference
+                   and yp.id_fuel_type = @pid_fuel_type
+                   and yp.fipe         = @pfipe
+                   and yp.year         = @pyear)
   begin
     insert into fipe.year_price(id,
                                 id_model,

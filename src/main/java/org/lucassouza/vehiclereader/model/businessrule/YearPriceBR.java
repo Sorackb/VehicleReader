@@ -24,35 +24,26 @@ public class YearPriceBR extends BasicBR {
   public YearPriceBR() {
     this.yearPricePT = new YearPricePT();
     this.resourceType = ResourceType.YEAR_PRICE;
-    this.proceed = true;
   }
 
-  public List<YearPrice> readAll(Interaction interaction, Reference reference,
+  public List<YearPrice> readAll(Reference reference,
           Model model) throws IOException {
     List<YearPrice> result = new ArrayList<>();
     JSONArray list;
-    String id;
 
-    list = new JSONArray(interaction.getLastResponse().body());
+    list = new JSONArray(Interaction.getInstance().getLastResponse().body());
     this.informAmount(list.length());
 
     for (Object object : list) {
       JSONObject converted = (JSONObject) object;
       YearPrice yearPrice;
+      String id;
+
       id = converted.getString("Value");
 
-      if (this.proceed) {
-        interaction.setYearPriceId(id);
-        yearPrice = this.convert(interaction, reference, model);
-        result.add(yearPrice);
-      }
-
-      /* Neste caso a verificação de continuidade fica depois porque se o último
-       * for igual ao atual não há necessidade de ler
-       */
-      if (!this.proceed && this.lastYearPrice.getId().equals(Integer.parseInt(id))) {
-        this.proceed = true;
-      }
+      Interaction.getInstance().setYearPriceId(id);
+      yearPrice = this.convert(reference, model);
+      result.add(yearPrice);
 
       this.informIncrement();
     }
@@ -63,9 +54,8 @@ public class YearPriceBR extends BasicBR {
     return result;
   }
 
-  private YearPrice convert(Interaction interaction, Reference reference,
-          Model model) {
-    JSONObject object = new JSONObject(interaction.getLastResponse().body());
+  private YearPrice convert(Reference reference, Model model) {
+    JSONObject object = new JSONObject(Interaction.getInstance().getLastResponse().body());
     YearPrice result = new YearPrice();
     Float value;
     String fuel;
