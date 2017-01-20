@@ -1,15 +1,11 @@
 package org.lucassouza.vehiclereader.model.businessrule;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lucassouza.tools.DateTool;
 import org.lucassouza.vehiclereader.controller.Communicable;
 import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.model.persistence.ReferencePT;
@@ -137,28 +133,22 @@ public class ReferenceBR extends BasicBR {
   }
 
   private Reference convert(JSONObject reference) {
-    SimpleDateFormat formatterMonthExt = new SimpleDateFormat("MMM");
-    SimpleDateFormat formatterExt = new SimpleDateFormat("MMM/yyyy");
-    SimpleDateFormat formatterExtInv = new SimpleDateFormat("yyyy/MMM");
-    Calendar calendar = Calendar.getInstance();
-    String description = reference.getString("Mes");
     Reference result = new Reference();
+    String description;
     String[] textPart;
-    Date today;
+    int month;
+    int year;
 
     result.setId(reference.getInt("Codigo"));
+    description = reference.getString("Mes");
+    description = description.trim();
     textPart = description.split("/");
+    month = DateTool.monthAsNumber(textPart[0], new Locale("pt", "BR"));
+    year = Integer.parseInt(textPart[1].trim());
 
-    try {
-      today = formatterExtInv.parse(description);
-      result.setDescription(formatterExt.format(today));
-      calendar.setTime(formatterMonthExt.parse(textPart[1]));
-      result.setMonth(calendar.get(Calendar.MONTH) + 1);
-    } catch (ParseException ex) {
-      Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-    }
-
-    result.setYear(Integer.parseInt(textPart[0].trim()));
+    result.setDescription(description);
+    result.setMonth(month);
+    result.setYear(year);
 
     return result;
   }
