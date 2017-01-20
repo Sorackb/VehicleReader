@@ -12,14 +12,14 @@ public class ReferenceCT implements DescriptorCustomizer {
 
   @Override
   public void customize(ClassDescriptor descriptor) {
-    StoredProcedureCall insertProc = new StoredProcedureCall();
+    StoredProcedureCall procedure = new StoredProcedureCall();
 
-    insertProc.setProcedureName("FIPE.SP_REFERENCE_INS");
-    insertProc.addNamedInOutputArgument("PID", "ID");
-    insertProc.addNamedArgument("PDESCRIPTION", "DESCRIPTION_PT");
-    insertProc.addNamedArgument("PMONTH", "MONTH");
-    insertProc.addNamedArgument("PYEAR", "YEAR");
+    procedure.setProcedureName("FIPE.INSERT_REFERENCE");
+    procedure.addNamedInOutputArgument("PID", "ID");
+    procedure.addNamedArgument("PDESCRIPTION", "DESCRIPTION_PT");
+    procedure.addNamedArgument("PMONTH", "MONTH");
+    procedure.addNamedArgument("PYEAR", "YEAR");
 
-    descriptor.getQueryManager().setInsertCall(insertProc);
+    descriptor.getQueryManager().setInsertCall(procedure);
   }
 }

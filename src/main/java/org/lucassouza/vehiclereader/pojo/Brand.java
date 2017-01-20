@@ -12,7 +12,7 @@ import org.lucassouza.vehiclereader.model.customizer.BrandCT;
  * @author Lucas Souza [sorackb@gmail.com]
  */
 @Entity
-@Table(name = "fipe.tb_brand")
+@Table(name = "fipe.brand")
 @Customizer(BrandCT.class)
 public class Brand implements Serializable {
   @Id

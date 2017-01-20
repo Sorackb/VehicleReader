@@ -12,14 +12,14 @@ public class ModelCT implements DescriptorCustomizer {
 
   @Override
   public void customize(ClassDescriptor descriptor) {
-    StoredProcedureCall insertProc = new StoredProcedureCall();
+    StoredProcedureCall procedure = new StoredProcedureCall();
 
-    insertProc.setProcedureName("FIPE.SP_MODEL_INS");
-    insertProc.addNamedArgument("PID", "ID");
-    insertProc.addNamedArgument("PID_BRAND", "ID_BRAND");
-    insertProc.addNamedArgument("PID_VEHICLE_CLASSIFICATION", "ID_VEHICLE_CLASSIFICATION");
-    insertProc.addNamedArgument("PDESCRIPTION", "DESCRIPTION");
+    procedure.setProcedureName("FIPE.INSERT_MODEL");
+    procedure.addNamedArgument("PID", "ID");
+    procedure.addNamedArgument("PID_BRAND", "ID_BRAND");
+    procedure.addNamedArgument("PID_VEHICLE_CLASSIFICATION", "ID_VEHICLE_CLASSIFICATION");
+    procedure.addNamedArgument("PDESCRIPTION", "DESCRIPTION");
 
-    descriptor.getQueryManager().setInsertCall(insertProc);
+    descriptor.getQueryManager().setInsertCall(procedure);
   }
 }

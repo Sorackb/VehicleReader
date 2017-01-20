@@ -12,16 +12,16 @@ public class YearPriceCT implements DescriptorCustomizer {
 
   @Override
   public void customize(ClassDescriptor descriptor) {
-    StoredProcedureCall insertProc = new StoredProcedureCall();
+    StoredProcedureCall procedure = new StoredProcedureCall();
 
-    insertProc.setProcedureName("FIPE.SP_YEAR_PRICE_INS");
-    insertProc.addNamedInOutputArgument("PID", "ID");
-    insertProc.addNamedArgument("PID_MODEL", "ID_MODEL");
-    insertProc.addNamedArgument("PID_REFERENCE", "ID_REFERENCE");
-    insertProc.addNamedArgument("PID_FUEL_TYPE", "ID_FUEL_TYPE");
-    insertProc.addNamedArgument("PYEAR", "YEAR");
-    insertProc.addNamedArgument("PPRICE", "PRICE");
+    procedure.setProcedureName("FIPE.INSERT_YEAR_PRICE");
+    procedure.addNamedInOutputArgument("PID", "ID");
+    procedure.addNamedArgument("PID_MODEL", "ID_MODEL");
+    procedure.addNamedArgument("PID_REFERENCE", "ID_REFERENCE");
+    procedure.addNamedArgument("PID_FUEL_TYPE", "ID_FUEL_TYPE");
+    procedure.addNamedArgument("PYEAR", "YEAR");
+    procedure.addNamedArgument("PPRICE", "PRICE");
 
-    descriptor.getQueryManager().setInsertCall(insertProc);
+    descriptor.getQueryManager().setInsertCall(procedure);
   }
 }

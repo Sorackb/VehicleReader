@@ -12,12 +12,12 @@ public class BrandCT implements DescriptorCustomizer {
 
   @Override
   public void customize(ClassDescriptor descriptor) {
-    StoredProcedureCall insertProc = new StoredProcedureCall();
+    StoredProcedureCall procedure = new StoredProcedureCall();
 
-    insertProc.setProcedureName("FIPE.SP_BRAND_INS");
-    insertProc.addNamedInOutputArgument("PID", "ID");
-    insertProc.addNamedArgument("PDESCRIPTION", "DESCRIPTION");
+    procedure.setProcedureName("FIPE.INSERT_BRAND");
+    procedure.addNamedInOutputArgument("PID", "ID");
+    procedure.addNamedArgument("PDESCRIPTION", "DESCRIPTION");
 
-    descriptor.getQueryManager().setInsertCall(insertProc);
+    descriptor.getQueryManager().setInsertCall(procedure);
   }
 }

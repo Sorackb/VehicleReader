@@ -18,7 +18,7 @@ import org.lucassouza.vehiclereader.type.VehicleClassification;
  * @author Lucas Souza [sorackb@gmail.com]
  */
 @Entity
-@Table(name = "fipe.tb_model")
+@Table(name = "fipe.model")
 @Customizer(ModelCT.class)
 public class Model implements Serializable {
 

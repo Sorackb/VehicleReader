@@ -16,7 +16,7 @@ import org.lucassouza.vehiclereader.type.ReferenceSituation;
  * @author Lucas Souza [sorackb@gmail.com]
  */
 @Entity
-@Table(name = "fipe.tb_reference")
+@Table(name = "fipe.reference")
 @Customizer(ReferenceCT.class)
 public class Reference implements Serializable {
 

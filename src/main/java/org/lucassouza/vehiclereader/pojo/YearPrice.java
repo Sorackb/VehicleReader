@@ -21,7 +21,7 @@ import org.lucassouza.vehiclereader.type.FuelType;
  */
 
 @Entity
-@Table(name = "fipe.tb_year_price")
+@Table(name = "fipe.year_price")
 @Customizer(YearPriceCT.class)
 public class YearPrice implements Serializable {
 
