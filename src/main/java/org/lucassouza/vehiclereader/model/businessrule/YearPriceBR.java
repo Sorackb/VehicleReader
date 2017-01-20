@@ -79,8 +79,8 @@ public class YearPriceBR extends BasicBR {
     fipe = object.getString("CodigoFipe");
     authentication = object.getString("Autenticacao");
 
-    // Caso esteja 3200 o ano é de referência
-    if (year == 3200) {
+    // Caso esteja 32000 o ano é de referência
+    if (year == 32000) {
       year = reference.getYear();
     }
 
