@@ -5,12 +5,19 @@ end
 go
 
 alter procedure fipe.insert_model
-  @pid                        varchar(8),
+  @pid                        int output,
   @pid_brand                  int,
   @pid_vehicle_classification int,
   @pdescription               varchar(90)
 as
 begin
+  -- Search for the next code if the parameter is null
+  if @pid is null
+  begin
+    select @pid = isnull(max(m.id), 0) + 1
+      from fipe.model m;
+  end;
+
   -- Avoids duplicate
   if not exists(select m.id
                   from fipe.model m

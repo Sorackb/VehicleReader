@@ -15,7 +15,7 @@ public class ModelCT implements DescriptorCustomizer {
     StoredProcedureCall procedure = new StoredProcedureCall();
 
     procedure.setProcedureName("FIPE.INSERT_MODEL");
-    procedure.addNamedArgument("PID", "ID");
+    procedure.addNamedInOutputArgument("PID", "ID");
     procedure.addNamedArgument("PID_BRAND", "ID_BRAND");
     procedure.addNamedArgument("PID_VEHICLE_CLASSIFICATION", "ID_VEHICLE_CLASSIFICATION");
     procedure.addNamedArgument("PDESCRIPTION", "DESCRIPTION");

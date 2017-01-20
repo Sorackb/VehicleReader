@@ -21,6 +21,8 @@ public class YearPriceCT implements DescriptorCustomizer {
     procedure.addNamedArgument("PID_FUEL_TYPE", "ID_FUEL_TYPE");
     procedure.addNamedArgument("PYEAR", "YEAR");
     procedure.addNamedArgument("PPRICE", "PRICE");
+    procedure.addNamedArgument("PFIPE", "FIPE");
+    procedure.addNamedArgument("PAUTHENTICATION", "AUTHENTICATION");
 
     descriptor.getQueryManager().setInsertCall(procedure);
   }

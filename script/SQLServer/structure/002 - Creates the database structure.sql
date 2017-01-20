@@ -55,7 +55,7 @@ go
 if object_id('fipe.model', 'U') is null
 begin
   create table fipe.model(
-    id                        varchar(8)  not null,
+    id                        int         not null,
     id_brand                  int         not null,
     id_vehicle_classification int         not null,
     description               varchar(90) not null,
@@ -70,12 +70,14 @@ go
 if object_id('fipe.year_price', 'U') is null
 begin
   create table fipe.year_price(
-    id           int        not null,
-    id_model     varchar(8) not null,
-    id_reference int        not null,
-    id_fuel_type int,
-    year         int        not null,
-    price        money,
+    id             int        not null,
+    id_model       int        not null,
+    id_reference   int        not null,
+    id_fuel_type   int,
+    year           int        not null,
+    fipe           varchar(8),
+    price          money,
+    authentication varchar(11),
     reading_date datetime default getDate(),
     constraint pk_year_price primary key(id, id_model),
     constraint fk_year_price_model foreign key(id_model)

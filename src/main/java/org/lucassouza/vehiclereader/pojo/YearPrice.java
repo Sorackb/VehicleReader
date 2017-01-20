@@ -19,7 +19,6 @@ import org.lucassouza.vehiclereader.type.FuelType;
  *
  * @author Lucas Souza [sorackb@gmail.com]
  */
-
 @Entity
 @Table(name = "fipe.year_price")
 @Customizer(YearPriceCT.class)
@@ -38,6 +37,8 @@ public class YearPrice implements Serializable {
   @Enumerated(EnumType.ORDINAL)
   @Column(name = "id_fuel_type")
   private FuelType fuelType;
+  private String fipe;
+  private String authentication;
   @Temporal(javax.persistence.TemporalType.DATE)
   @Column(name = "reading_date")
   private Date readingDate;
@@ -89,6 +90,22 @@ public class YearPrice implements Serializable {
 
   public void setFuelType(FuelType fuelType) {
     this.fuelType = fuelType;
+  }
+
+  public String getFipe() {
+    return fipe;
+  }
+
+  public void setFipe(String fipe) {
+    this.fipe = fipe;
+  }
+
+  public String getAuthentication() {
+    return authentication;
+  }
+
+  public void setAuthentication(String authentication) {
+    this.authentication = authentication;
   }
 
   public Date getReadingDate() {

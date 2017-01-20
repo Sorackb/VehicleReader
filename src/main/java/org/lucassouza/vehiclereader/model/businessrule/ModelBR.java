@@ -62,7 +62,7 @@ public class ModelBR extends BasicBR {
     for (Model model : result) {
       interaction.setModelId(model.getId());
       // TODO Send interaction
-      yearPriceBR.readAll(null, reference, model);
+      yearPriceBR.readAll(interaction, reference, model);
       this.informIncrement();
     }
 

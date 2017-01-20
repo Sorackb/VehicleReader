@@ -32,6 +32,7 @@ public enum FuelType {
           result = DIESEL;
           break;
         default:
+          System.out.println(fuelTypeDescription.trim().toUpperCase());
           result = OTHER;
       }
     }

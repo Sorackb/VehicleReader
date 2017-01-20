@@ -1,10 +1,11 @@
 package org.lucassouza.vehiclereader.model.businessrule;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.lucassouza.vehiclereader.model.Interaction2 ;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.lucassouza.vehiclereader.model.Interaction;
 import org.lucassouza.vehiclereader.model.persistence.YearPricePT;
 import org.lucassouza.vehiclereader.pojo.Model;
 import org.lucassouza.vehiclereader.pojo.Reference;
@@ -26,21 +27,22 @@ public class YearPriceBR extends BasicBR {
     this.proceed = true;
   }
 
-  public List<YearPrice> readAll(Interaction2  interaction, Reference reference,
-          Model model) {
-    Elements yearPriceList = interaction.getPageSource().select(
-            "select#ddlAnoValor > option:not(:nth-of-type(1))");
+  public List<YearPrice> readAll(Interaction interaction, Reference reference,
+          Model model) throws IOException {
     List<YearPrice> result = new ArrayList<>();
+    JSONArray list;
     String id;
-    YearPrice yearPrice;
 
-    this.informAmount(yearPriceList.size());
+    list = new JSONArray(interaction.getLastResponse().body());
+    this.informAmount(list.length());
 
-    for (Element yearPriceElement : yearPriceList) {
-      id = yearPriceElement.attr("value");
+    for (Object object : list) {
+      JSONObject converted = (JSONObject) object;
+      YearPrice yearPrice;
+      id = converted.getString("Value");
 
       if (this.proceed) {
-        interaction.setYearPriceId(Integer.parseInt(id));
+        interaction.setYearPriceId(id);
         yearPrice = this.convert(interaction, reference, model);
         result.add(yearPrice);
       }
@@ -61,36 +63,34 @@ public class YearPriceBR extends BasicBR {
     return result;
   }
 
-  private YearPrice convert(Interaction2  interaction, Reference reference,
+  private YearPrice convert(Interaction interaction, Reference reference,
           Model model) {
-    Integer id = Integer.parseInt(interaction.getPageSource().select(
-            "select#ddlAnoValor > option[selected=selected]").first().attr("value"));
-    Float value = Float.parseFloat(interaction.getPageSource().select(
-            "span#lblValor").first().text().replace("R$", "").replace(".", "")
-            .replace(",", ".").trim());
-    String description = interaction.getPageSource().select("span#lblAnoModelo").text();
-    String descriptionPart = description.substring(0, 4);
+    JSONObject object = new JSONObject(interaction.getLastResponse().body());
     YearPrice result = new YearPrice();
-    String fuel = null;
-    Integer year;
+    Float value;
+    String fuel;
+    int year;
+    String fipe;
+    String authentication;
 
-    // Caso esteja escrito "Zero KM" o ano é o mesmo da referência
-    if (descriptionPart.toUpperCase().equals("ZERO")) {
+    value = Float.parseFloat(object.getString("Valor").replace("R$", "").replace(".", "").replace(",", ".").trim());
+    year = object.getInt("AnoModelo");
+    fuel = object.getString("Combustivel").toUpperCase();
+    fipe = object.getString("CodigoFipe");
+    authentication = object.getString("Autenticacao");
+
+    // Caso esteja 3200 o ano é de referência
+    if (year == 3200) {
       year = reference.getYear();
-      fuel = description.substring(9, description.length()).trim().toUpperCase();
-    } else {
-      year = Integer.parseInt(descriptionPart);
-      if (description.length() > 4) {
-        fuel = description.substring(5, description.length()).trim().toUpperCase();
-      }
     }
 
-    result.setId(id);
     result.setYear(year);
     result.setPrice(value);
     result.setModel(model);
     result.setReference(reference);
     result.setFuelType(FuelType.getFuelType(fuel));
+    result.setFipe(fipe);
+    result.setAuthentication(authentication);
 
     return result;
   }

@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import org.jsoup.Connection;
 import org.lucassouza.navigation.model.Content;
 import org.lucassouza.navigation.model.Navigation;
+import org.lucassouza.vehiclereader.type.FuelType;
 import org.lucassouza.vehiclereader.type.VehicleClassification;
 
 /**
@@ -76,10 +77,11 @@ public class Interaction extends Navigation {
     Content years;
 
     this.fields.put("codigoModelo", String.valueOf(id));
+    this.cookies.clear(); // A partir de 100 feitos com o mesmo cookie ocasionam um erro
 
     years = this.defaults.initialize()
             .method(Connection.Method.POST)
-            .complement("/ConsultarModelos")
+            .complement("/ConsultarAnoModelo")
             .fields("codigoTipoVeiculo",
                     "codigoTabelaReferencia",
                     "codigoMarca",
@@ -88,5 +90,31 @@ public class Interaction extends Navigation {
             .build();
 
     this.request(years);
+  }
+
+  public void setYearPriceId(String id) throws IOException {
+    Content informations;
+    String[] parts;
+
+    parts = id.split("-");
+    this.fields.put("anoModelo", parts[0].trim());
+    this.fields.put("codigoTipoCombustivel", parts[1].trim());    
+    this.fields.put("tipoConsulta", "tradicional");
+    //this.fields.put("tipoVeiculo", "carro");
+
+    informations = this.defaults.initialize()
+            .method(Connection.Method.POST)
+            .complement("/ConsultarValorComTodosParametros")
+            .fields("codigoTipoVeiculo",
+                    "codigoTabelaReferencia",
+                    "codigoMarca",
+                    "codigoModelo",
+                    "anoModelo",
+                    "codigoTipoCombustivel",
+                    "tipoConsulta")
+            .headers(this.headers)
+            .build();
+
+    this.request(informations);
   }
 }

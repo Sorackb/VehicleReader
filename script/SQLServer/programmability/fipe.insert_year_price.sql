@@ -6,11 +6,13 @@ go
 
 alter procedure fipe.insert_year_price
   @pid                  int output,
-  @pid_model            varchar(8),
+  @pid_model            int,
   @pid_reference        int,
   @pid_fuel_type        int,
   @pyear                int,
-  @pprice               money
+  @pprice               money,
+  @pfipe                varchar(8),
+  @pauthentication      varchar(11)
 as
 begin
   -- Search for the next code if the parameter is null
@@ -31,12 +33,16 @@ begin
                                 id_reference,
                                 id_fuel_type,
                                 year,
-                                price)
+                                price,
+                                fipe,
+                                authentication)
                          values(@pid,
                                 @pid_model,
                                 @pid_reference,
                                 @pid_fuel_type,
                                 @pyear,
-                                @pprice);
+                                @pprice,
+                                @pfipe,
+                                @pauthentication);
   end;
 end;
