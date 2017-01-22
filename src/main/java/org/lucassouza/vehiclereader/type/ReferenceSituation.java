@@ -19,7 +19,7 @@ public enum ReferenceSituation {
   }
 
   public static ReferenceSituation valueOf(Integer aIdDB) {
-    for(ReferenceSituation referenceSituation: ReferenceSituation.values()) {
+    for (ReferenceSituation referenceSituation : ReferenceSituation.values()) {
       if (referenceSituation.getIdDB().equals(aIdDB)) {
         return referenceSituation;
       }

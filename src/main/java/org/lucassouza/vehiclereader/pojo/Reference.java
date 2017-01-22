@@ -26,9 +26,8 @@ public class Reference implements Serializable {
   private String description;
   private Integer year;
   private Integer month;
-  @Enumerated(EnumType.ORDINAL)
   @Column(name = "id_reference_situation")
-  private ReferenceSituation referenceSituation;
+  private int referenceSituation;
   private static final long serialVersionUID = 1;
 
   public Integer getId() {
@@ -64,11 +63,11 @@ public class Reference implements Serializable {
   }
 
   public ReferenceSituation getReferenceSituation() {
-    return referenceSituation;
+    return ReferenceSituation.valueOf(referenceSituation);
   }
 
   public void setReferenceSituation(ReferenceSituation referenceSituation) {
-    this.referenceSituation = referenceSituation;
+    this.referenceSituation = referenceSituation.getIdDB();
   }
 
   public Boolean equals(Reference reference) {
