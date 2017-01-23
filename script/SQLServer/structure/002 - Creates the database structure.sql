@@ -70,7 +70,7 @@ go
 if object_id('fipe.year_price', 'U') is null
 begin
   create table fipe.year_price(
-    id             int        not null,
+    id             int        identity not null,
     id_model       int        not null,
     id_reference   int        not null,
     id_fuel_type   int,
@@ -78,13 +78,20 @@ begin
     fipe           varchar(8),
     price          money,
     authentication varchar(11),
-    reading_date datetime default getDate(),
-    constraint pk_year_price primary key(id, id_model),
+    zero           bit,
+    reading_date   datetime default getDate(),
+    constraint pk_year_price primary key(id),
     constraint fk_year_price_model foreign key(id_model)
                references fipe.model(id) on delete cascade,
     constraint fk_year_price_reference foreign key(id_reference)
                references fipe.reference(id) on delete cascade,
     constraint fk_year_price_fuel_type foreign key(id_fuel_type)
                references fipe.fuel_type(id));
+end;
+go
+
+if indexproperty(object_id('fipe.year_price'), 'ix_year_price', 'IndexId') is null
+begin
+  create index ix_year_price on fipe.year_price(id_model, year, id_reference, id_fuel_type, zero);
 end;
 go

@@ -39,6 +39,7 @@ public class YearPrice implements Serializable {
   @Temporal(javax.persistence.TemporalType.DATE)
   @Column(name = "reading_date")
   private Date readingDate;
+  private int zero;
   private static final long serialVersionUID = 1;
 
   public Integer getId() {
@@ -111,6 +112,14 @@ public class YearPrice implements Serializable {
 
   public void setReadingDate(Date readingDate) {
     this.readingDate = readingDate;
+  }
+
+  public boolean isZero() {
+    return this.zero == 1;
+  }
+
+  public void setZero(boolean zero) {
+    this.zero = zero ? 1 : 0;
   }
 
   public Boolean equals(YearPrice yearPrice) {

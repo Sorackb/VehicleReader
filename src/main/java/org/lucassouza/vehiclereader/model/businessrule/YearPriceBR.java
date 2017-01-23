@@ -72,6 +72,9 @@ public class YearPriceBR extends BasicBR {
     // Caso esteja 32000 o ano é de referência
     if (year == 32000) {
       year = reference.getYear();
+      result.setZero(true);
+    } else {
+      result.setZero(false);
     }
 
     result.setYear(year);

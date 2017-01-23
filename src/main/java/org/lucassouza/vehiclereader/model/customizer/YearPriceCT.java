@@ -23,6 +23,7 @@ public class YearPriceCT implements DescriptorCustomizer {
     procedure.addNamedArgument("PPRICE", "PRICE");
     procedure.addNamedArgument("PFIPE", "FIPE");
     procedure.addNamedArgument("PAUTHENTICATION", "AUTHENTICATION");
+    procedure.addNamedArgument("PZERO", "ZERO");
 
     descriptor.getQueryManager().setInsertCall(procedure);
   }

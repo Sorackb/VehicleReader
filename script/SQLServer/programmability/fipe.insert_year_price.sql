@@ -12,26 +12,21 @@ alter procedure fipe.insert_year_price
   @pyear                int,
   @pprice               money,
   @pfipe                varchar(8),
-  @pauthentication      varchar(11)
+  @pauthentication      varchar(11),
+  @pzero                bit
 as
 begin
   set nocount on;
 
-  -- Search for the next code if the parameter is null
-  if @pid is null
-  begin
-    select @pid = isnull(max(yp.id), 0) + 1
-      from fipe.year_price yp;
-  end;
-
   -- Avoids duplicate
   if not exists(select yp.id
                   from fipe.year_price yp
+                 -- where matches ix_year_price index
                  where yp.id_model     = @pid_model
+                   and yp.year         = @pyear
                    and yp.id_reference = @pid_reference
                    and yp.id_fuel_type = @pid_fuel_type
-                   and yp.fipe         = @pfipe
-                   and yp.year         = @pyear)
+                   and yp.zero         = @pzero)
   begin
     insert into fipe.year_price(id,
                                 id_model,
@@ -40,7 +35,8 @@ begin
                                 year,
                                 price,
                                 fipe,
-                                authentication)
+                                authentication,
+                                zero)
                          values(@pid,
                                 @pid_model,
                                 @pid_reference,
@@ -48,6 +44,10 @@ begin
                                 @pyear,
                                 @pprice,
                                 @pfipe,
-                                @pauthentication);
+                                @pauthentication,
+                                @pzero);
+
+    set @pid = scope_identity();
   end;
 end;
+go
