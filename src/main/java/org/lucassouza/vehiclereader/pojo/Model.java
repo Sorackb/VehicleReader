@@ -3,8 +3,6 @@ package org.lucassouza.vehiclereader.pojo;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,9 +26,8 @@ public class Model implements Serializable {
   @ManyToOne
   @JoinColumn(name = "id_brand")
   private Brand brand;
-  @Enumerated(EnumType.ORDINAL)
   @Column(name = "id_vehicle_classification")
-  private VehicleClassification vehicleClassification;
+  private int vehicleClassification;
   private static final long serialVersionUID = 1;
 
   public int getId() {
@@ -58,11 +55,11 @@ public class Model implements Serializable {
   }
 
   public VehicleClassification getVehicleClassification() {
-    return vehicleClassification;
+    return VehicleClassification.valueOf(this.vehicleClassification);
   }
 
   public void setVehicleClassification(VehicleClassification vehicleClassification) {
-    this.vehicleClassification = vehicleClassification;
+    this.vehicleClassification = vehicleClassification.getId();
   }
 
   public Boolean equals(Model model) {

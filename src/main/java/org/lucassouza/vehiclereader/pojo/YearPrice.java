@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,9 +32,8 @@ public class YearPrice implements Serializable {
   private Reference reference;
   private Integer year;
   private Float price;
-  @Enumerated(EnumType.ORDINAL)
   @Column(name = "id_fuel_type")
-  private FuelType fuelType;
+  private int fuelType;
   private String fipe;
   private String authentication;
   @Temporal(javax.persistence.TemporalType.DATE)
@@ -85,11 +82,11 @@ public class YearPrice implements Serializable {
   }
 
   public FuelType getFuelType() {
-    return fuelType;
+    return FuelType.valueOf(fuelType);
   }
 
   public void setFuelType(FuelType fuelType) {
-    this.fuelType = fuelType;
+    this.fuelType = fuelType.getIdDB();
   }
 
   public String getFipe() {

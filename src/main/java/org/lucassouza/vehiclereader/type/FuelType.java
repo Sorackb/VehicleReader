@@ -40,6 +40,16 @@ public enum FuelType {
     return result;
   }
 
+  public static FuelType valueOf(Integer aIdDB) {
+    for (FuelType fuelType : FuelType.values()) {
+      if (fuelType.getIdDB().equals(aIdDB)) {
+        return fuelType;
+      }
+    }
+
+    return null;
+  }
+
   public Integer getIdDB() {
     return idDB;
   }

@@ -15,6 +15,7 @@ import org.lucassouza.vehiclereader.model.customizer.BrandCT;
 @Table(name = "fipe.brand")
 @Customizer(BrandCT.class)
 public class Brand implements Serializable {
+
   @Id
   private Integer id;
   private String description;
@@ -35,7 +36,7 @@ public class Brand implements Serializable {
   public void setDescription(String description) {
     this.description = description;
   }
-  
+
   public Boolean equals(Brand brand) {
     return brand != null && brand.getId().equals(this.getId());
   }

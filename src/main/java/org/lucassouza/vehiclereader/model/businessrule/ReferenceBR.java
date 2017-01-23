@@ -29,7 +29,7 @@ public class ReferenceBR extends BasicBR {
 
   public ReferenceBR() {
     this.resourceType = ResourceType.REFERENCE;
-    this.proceedReference = true;
+    this.proceedReference = false;
     this.proceedClassification = true;
   }
 
@@ -72,11 +72,6 @@ public class ReferenceBR extends BasicBR {
      */
     for (Reference reference : this.readingList) {
       // Caso já esteja completo apenas segue em frente
-      if (ReferenceSituation.COMPLETE.equals(reference.getReferenceSituation())) {
-        this.informIncrement();
-        continue;
-      }
-
       if (!this.proceedReference && this.lastReference.equals(reference)) {
         this.proceedReference = true;
       }

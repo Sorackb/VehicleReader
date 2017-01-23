@@ -50,6 +50,6 @@ public abstract class BasicBR {
 
     if (lastYearPrice != null) {
       this.proceed = false;
-    } 
+    }
   }
 }

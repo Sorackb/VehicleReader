@@ -3,8 +3,6 @@ package org.lucassouza.vehiclereader.pojo;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.eclipse.persistence.annotations.Customizer;
