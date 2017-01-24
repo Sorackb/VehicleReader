@@ -72,7 +72,7 @@ public class ReferenceBR extends BasicBR {
      */
     for (Reference reference : this.readingList) {
       // Caso já esteja completo apenas segue em frente
-      if (!this.proceedReference && this.lastReference.equals(reference)) {
+      if (this.lastReference == null || this.lastReference.equals(reference)) {
         this.proceedReference = true;
       }
 
