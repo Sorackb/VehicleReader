@@ -28,8 +28,7 @@ begin
                    and yp.id_fuel_type = @pid_fuel_type
                    and yp.zero         = @pzero)
   begin
-    insert into fipe.year_price(id,
-                                id_model,
+    insert into fipe.year_price(id_model,
                                 id_reference,
                                 id_fuel_type,
                                 year,
@@ -37,8 +36,7 @@ begin
                                 fipe,
                                 authentication,
                                 zero)
-                         values(@pid,
-                                @pid_model,
+                         values(@pid_model,
                                 @pid_reference,
                                 @pid_fuel_type,
                                 @pyear,
