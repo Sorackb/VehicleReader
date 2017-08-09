@@ -3,6 +3,7 @@ package org.lucassouza.vehiclereader.model.businessrule;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lucassouza.vehiclereader.model.Interaction;
@@ -27,7 +28,7 @@ public class YearPriceBR extends BasicBR {
   }
 
   public List<YearPrice> readAll(Reference reference,
-          Model model) throws IOException {
+          Model model) throws IOException, InterruptedException, ExecutionException {
     List<YearPrice> result = new ArrayList<>();
     JSONArray list;
 

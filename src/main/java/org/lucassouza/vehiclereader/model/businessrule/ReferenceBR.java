@@ -3,6 +3,7 @@ package org.lucassouza.vehiclereader.model.businessrule;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lucassouza.tools.DateTool;
@@ -38,7 +39,7 @@ public class ReferenceBR extends BasicBR {
     this.readingList = readingList;
   }
 
-  public List<Reference> updateReferences() throws IOException {
+  public List<Reference> updateReferences() throws IOException, InterruptedException, ExecutionException {
     ReferencePT referencePT = new ReferencePT();
     List<Reference> result;
     JSONArray list;
@@ -53,12 +54,12 @@ public class ReferenceBR extends BasicBR {
       referencePT.create(reference);
     }
 
-    result = referencePT.readAll("id", false);
+    result = referencePT.readAll("id", true);
 
     return result;
   }
 
-  public void readAll() throws IOException {
+  public void readAll() throws IOException, InterruptedException, ExecutionException {
     ReferencePT referencePT = new ReferencePT();
 
     if (this.readingList == null) {
@@ -113,7 +114,8 @@ public class ReferenceBR extends BasicBR {
     }
   }
 
-  private void continueReading(Reference reference, VehicleClassification classification) throws IOException {
+  private void continueReading(Reference reference, VehicleClassification classification)
+          throws IOException, InterruptedException, ExecutionException {
     BrandBR brandBR = new BrandBR();
 
     Interaction.getInstance().setReferenceId(reference.getId());

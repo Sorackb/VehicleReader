@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lucassouza.vehiclereader.model.businessrule.ReferenceBR;
@@ -24,7 +25,7 @@ public class Reader extends Thread implements Communicable {
     this.observer = observer;
   }
 
-  private void evaluate() throws IOException {
+  private void evaluate() throws IOException, InterruptedException, ExecutionException {
     YearPriceBR yearPriceBR;
     ReferenceBR referenceBR;
     YearPrice lastYearPrice;

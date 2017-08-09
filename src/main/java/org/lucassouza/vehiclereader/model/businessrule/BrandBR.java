@@ -3,6 +3,7 @@ package org.lucassouza.vehiclereader.model.businessrule;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lucassouza.vehiclereader.model.Interaction;
@@ -26,7 +27,7 @@ public class BrandBR extends BasicBR {
     this.proceed = true;
   }
 
-  public List<Brand> readAll(VehicleClassification classification, Reference reference) throws IOException {
+  public List<Brand> readAll(VehicleClassification classification, Reference reference) throws IOException, InterruptedException, ExecutionException {
     List<Brand> result = new ArrayList<>();
     BrandPT brandPT = new BrandPT();
     ModelBR modelBR = new ModelBR();

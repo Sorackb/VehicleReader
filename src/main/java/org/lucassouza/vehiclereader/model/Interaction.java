@@ -2,27 +2,29 @@ package org.lucassouza.vehiclereader.model;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
 import org.jsoup.Connection;
+import org.jsoup.Connection.Response;
 import org.lucassouza.navigation.model.Content;
-import org.lucassouza.navigation.model.Navigation;
+import org.lucassouza.navigation.model.Navigator;
 import org.lucassouza.vehiclereader.type.VehicleClassification;
 
 /**
  *
  * @author lucas.souza
  */
-public class Interaction extends Navigation {
+public class Interaction extends Navigator {
 
   private static Interaction instance;
   private final LinkedHashMap<String, String> headers;
   private final String domain;
+  private Response lastResponse;
 
   public Interaction() {
     super();
     this.headers = new LinkedHashMap<>();
     this.domain = "http://veiculos.fipe.org.br/";
-    this.defaults = Content.initializer()
-            .domain(this.domain + "api/veiculos/");
+    this.defaults.domain(this.domain + "api/veiculos/");
     this.headers.put("Referer", this.domain);
     this.headers.put("Content-Type", "application/x-www-form-urlencoded");
   }
@@ -35,7 +37,8 @@ public class Interaction extends Navigation {
     return instance;
   }
 
-  public void setClassification(VehicleClassification classification) throws IOException {
+  public void setClassification(VehicleClassification classification) throws IOException,
+          InterruptedException, ExecutionException {
     Content references;
 
     this.fields.put("codigoTipoVeiculo", String.valueOf(classification.getId()));
@@ -46,10 +49,11 @@ public class Interaction extends Navigation {
             .headers(this.headers)
             .build();
 
-    this.request(references);
+    this.lastResponse = this.request(references).join();
   }
 
-  public void setReferenceId(int id) throws IOException {
+  public void setReferenceId(int id) throws IOException, InterruptedException,
+          ExecutionException {
     Content brands;
 
     this.fields.put("codigoTabelaReferencia", String.valueOf(id));
@@ -62,10 +66,11 @@ public class Interaction extends Navigation {
             .headers(this.headers)
             .build();
 
-    this.request(brands);
+    this.lastResponse = this.request(brands).join();
   }
 
-  public void setBrandId(int id) throws IOException {
+  public void setBrandId(int id) throws IOException, InterruptedException,
+          ExecutionException {
     Content models;
 
     this.fields.put("codigoMarca", String.valueOf(id));
@@ -79,10 +84,10 @@ public class Interaction extends Navigation {
             .headers(this.headers)
             .build();
 
-    this.request(models);
+    this.lastResponse = this.request(models).join();
   }
 
-  public void setModelId(int id) throws IOException {
+  public void setModelId(int id) throws IOException, InterruptedException, ExecutionException {
     Content years;
 
     this.fields.put("codigoModelo", String.valueOf(id));
@@ -98,10 +103,11 @@ public class Interaction extends Navigation {
             .headers(this.headers)
             .build();
 
-    this.request(years);
+    this.lastResponse = this.request(years).join();
   }
 
-  public void setYearPriceId(String id) throws IOException {
+  public void setYearPriceId(String id) throws IOException, InterruptedException,
+          ExecutionException {
     Content informations;
     String[] parts;
 
@@ -123,6 +129,10 @@ public class Interaction extends Navigation {
             .headers(this.headers)
             .build();
 
-    this.request(informations);
+    this.lastResponse = this.request(informations).join();
+  }
+
+  public Response getLastResponse() {
+    return lastResponse;
   }
 }
