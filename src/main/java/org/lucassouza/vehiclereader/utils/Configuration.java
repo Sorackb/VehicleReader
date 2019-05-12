@@ -3,6 +3,7 @@ package org.lucassouza.vehiclereader.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lucassouza.tools.PropertyTool;
@@ -43,7 +44,7 @@ public class Configuration {
     return "VehicleReaderPU";
   }
 
-  public static HashMap<String, String> getBDConfig() {
+  public static Map<String, String> getBDConfig() {
     String dataBaseLocation;
 
     if (bdConfig == null) {
