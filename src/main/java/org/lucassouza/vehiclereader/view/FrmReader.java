@@ -40,7 +40,7 @@ public class FrmReader extends JFrame implements Communicable {
   private Integer yearPriceByMinute;
 
   /**
-   * Creates new form FrmLeitor
+   * Creates new form FrmReader
    */
   public FrmReader() {
     initComponents();
@@ -228,7 +228,7 @@ public class FrmReader extends JFrame implements Communicable {
   }// </editor-fold>//GEN-END:initComponents
 
   private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-    Reader leitor = new Reader(this);
+    Reader reader = new Reader(this);
 
     this.yearPriceByMinute = 0;
     this.tick = 0L;
@@ -253,7 +253,7 @@ public class FrmReader extends JFrame implements Communicable {
         }
       }
     }).start();
-    leitor.start();
+    reader.start();
     this.btnIniciar.setEnabled(false);
   }//GEN-LAST:event_btnIniciarActionPerformed
 
